@@ -13,6 +13,7 @@ import {
   Search,
   CheckCircle2,
   Compass,
+  Terminal,
 } from 'lucide-react';
 import { ExplorerReport, RepositoryItem, TreeNode, ConfidenceLevel } from '../types';
 import { Card, CardHeader, CardContent } from '../components/common/Card';
@@ -209,9 +210,18 @@ export const ExplorerView: React.FC<ExplorerViewProps> = ({
               Viewing simulated codebase structure for <strong className="text-charcoal-100 font-mono">{activeRepo.name}</strong>.
             </span>
           </div>
-          <Badge variant="cyan" size="sm">
-            Demo Mode
-          </Badge>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => window.dispatchEvent(new CustomEvent('repopilot:terminal', { detail: { command: 'repopilot explore . --depth 2' } }))}
+              className="px-2.5 py-1 rounded bg-charcoal-800 hover:bg-charcoal-750 text-brand-cyan font-mono text-[11px] border border-charcoal-700 flex items-center gap-1.5 transition-colors"
+            >
+              <Terminal className="w-3 h-3" />
+              <span>Run in Terminal</span>
+            </button>
+            <Badge variant="cyan" size="sm">
+              Demo Mode
+            </Badge>
+          </div>
         </div>
       )}
 

@@ -9,6 +9,8 @@ import {
   ChevronRight,
   Terminal,
   ExternalLink,
+  Sparkles,
+  Globe,
 } from 'lucide-react';
 import { ActiveScreen, RepositoryItem } from '../../types';
 
@@ -19,6 +21,8 @@ interface SidebarProps {
   onOpenRepoSelector: () => void;
   isOpenOnMobile: boolean;
   onCloseMobile: () => void;
+  onToggleTerminal?: () => void;
+  isTerminalOpen?: boolean;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -28,6 +32,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onOpenRepoSelector,
   isOpenOnMobile,
   onCloseMobile,
+  onToggleTerminal,
+  isTerminalOpen,
 }) => {
   const navItems = [
     {
@@ -35,6 +41,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       label: 'Dashboard',
       icon: Home,
       description: 'Overview & quick launch',
+    },
+    {
+      id: 'ai-copilot' as ActiveScreen,
+      label: 'AI Copilot Mode',
+      icon: Sparkles,
+      description: 'AI test scaffold & PR review',
+      badge: 'AI',
     },
     {
       id: 'doctor' as ActiveScreen,
@@ -98,14 +111,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
           >
             <div className="flex items-center gap-2.5 min-w-0">
               <div className="w-7 h-7 rounded-md bg-charcoal-800 group-hover:bg-charcoal-750 border border-charcoal-700 flex items-center justify-center text-charcoal-300 shrink-0">
-                <FolderGit2 className="w-3.5 h-3.5" />
+                {activeRepo?.originType === 'github' ? (
+                  <Globe className="w-3.5 h-3.5 text-purple-400" />
+                ) : (
+                  <FolderGit2 className="w-3.5 h-3.5" />
+                )}
               </div>
               <div className="min-w-0">
-                <span className="text-[11px] font-medium text-charcoal-200 block truncate leading-tight">
-                  {activeRepo ? activeRepo.name : 'No repo selected'}
-                </span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[11px] font-medium text-charcoal-200 block truncate leading-tight">
+                    {activeRepo ? activeRepo.name : 'No repo selected'}
+                  </span>
+                </div>
                 <span className="text-[10px] text-charcoal-400 font-mono truncate block mt-0.5">
-                  {activeRepo ? (activeRepo.isDemo ? 'Demo Mode' : activeRepo.path) : 'Click to select'}
+                  {activeRepo
+                    ? activeRepo.originType === 'github'
+                      ? 'GitHub Remote'
+                      : activeRepo.isDemo
+                      ? 'Demo Mode'
+                      : activeRepo.path
+                    : 'Click to select'}
                 </span>
               </div>
             </div>
@@ -128,38 +153,64 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   onNavigate(item.id);
                   onCloseMobile();
                 }}
-                className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-xs font-medium transition-all group ${
+                className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-all group ${
                   isActive
-                    ? 'bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/25'
+                    ? 'bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/25 font-semibold'
                     : 'text-charcoal-400 hover:text-charcoal-200 hover:bg-charcoal-850/60'
                 }`}
               >
-                <Icon
-                  className={`w-4 h-4 shrink-0 transition-colors ${
-                    isActive ? 'text-brand-cyan' : 'text-charcoal-400 group-hover:text-charcoal-200'
-                  }`}
-                />
-                <span className="truncate">{item.label}</span>
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <Icon
+                    className={`w-4 h-4 shrink-0 transition-colors ${
+                      isActive ? 'text-brand-cyan' : 'text-charcoal-400 group-hover:text-charcoal-200'
+                    }`}
+                  />
+                  <span className="truncate">{item.label}</span>
+                </div>
+                {item.badge && (
+                  <span
+                    className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold uppercase ${
+                      isActive
+                        ? 'bg-brand-cyan/20 text-brand-cyan'
+                        : 'bg-charcoal-800 text-charcoal-400 border border-charcoal-700'
+                    }`}
+                  >
+                    {item.badge}
+                  </span>
+                )}
               </button>
             );
           })}
         </nav>
 
-        {/* Footer / CLI Status info */}
-        <div className="p-3 border-t border-charcoal-800 bg-charcoal-950/40">
-          <div className="p-2.5 rounded-lg bg-charcoal-850/60 border border-charcoal-800 text-[11px] space-y-1.5">
-            <div className="flex items-center justify-between text-charcoal-300 font-mono">
-              <span className="flex items-center gap-1.5 text-xs text-charcoal-200">
-                <Terminal className="w-3.5 h-3.5 text-brand-cyan" />
-                Python CLI
+        {/* Footer / Interactive Terminal Launcher */}
+        <div className="p-3 border-t border-charcoal-800 bg-charcoal-950/40 space-y-2">
+          {onToggleTerminal && (
+            <button
+              onClick={onToggleTerminal}
+              className={`w-full p-2.5 rounded-lg border text-left text-[11px] transition-all group flex items-center justify-between ${
+                isTerminalOpen
+                  ? 'bg-emerald-950/40 border-emerald-700/50 text-emerald-300'
+                  : 'bg-charcoal-850/70 border-charcoal-800 hover:border-charcoal-700 text-charcoal-300'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <Terminal className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <span className="font-mono font-medium text-xs">Terminal Drawer</span>
+              </div>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-charcoal-800 text-charcoal-400 border border-charcoal-700">
+                ^`
               </span>
-              <span className="text-[10px] px-1.5 py-0.2 bg-emerald-950/60 text-emerald-400 border border-emerald-800/40 rounded">
+            </button>
+          )}
+
+          <div className="p-2.5 rounded-lg bg-charcoal-850/40 border border-charcoal-800/80 text-[11px] space-y-1">
+            <div className="flex items-center justify-between text-charcoal-300 font-mono">
+              <span className="text-[10px] text-charcoal-400">Python CLI v0.1.0</span>
+              <span className="text-[9px] px-1.5 py-0.2 bg-emerald-950/60 text-emerald-400 border border-emerald-800/40 rounded">
                 Active
               </span>
             </div>
-            <p className="text-[10px] text-charcoal-400 leading-normal">
-              CLI Milestone 4 is fully tested. Run <code className="text-charcoal-200 bg-charcoal-800 px-1 py-0.5 rounded">repopilot --help</code> in terminal.
-            </p>
             <a
               href="https://github.com/ManshaAgarwal716/Repopilot"
               target="_blank"

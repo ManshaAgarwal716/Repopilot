@@ -1,13 +1,21 @@
-export type ActiveScreen = 'dashboard' | 'doctor' | 'explorer' | 'pr-compass';
+export type ActiveScreen = 'dashboard' | 'doctor' | 'explorer' | 'pr-compass' | 'ai-copilot';
+
+export type RepoOrigin = 'local' | 'github';
 
 export interface RepositoryItem {
   id: string;
   name: string;
   path: string;
+  originType: RepoOrigin;
+  remoteUrl?: string;
   isDemo: boolean;
   projectType: 'python' | 'nodejs' | 'both' | 'generic';
   lastOpened: string;
   branch?: string;
+  stars?: number;
+  forks?: number;
+  description?: string;
+  defaultBranch?: string;
 }
 
 // --- Doctor Diagnostics Types ---
@@ -51,6 +59,7 @@ export interface TreeNode {
   symlinkTarget?: string;
   sizeBytes?: number;
   children?: TreeNode[];
+  contentSample?: string;
 }
 
 export interface StructureOverview {
@@ -74,6 +83,7 @@ export interface ImportantFile {
   path: string;
   role: string;
   description: string;
+  contentSnippet?: string;
 }
 
 export interface ExplorerReport {
@@ -95,6 +105,7 @@ export interface FileChange {
   oldPath?: string;
   affectedArea: string;
   statusLabel: string;
+  diffSnippet?: string;
 }
 
 export interface UncommittedStatus {
@@ -112,6 +123,7 @@ export interface FileTestMapping {
   relatedTests: string[];
   hasPotentialGap: boolean;
   note: string;
+  generatedTestPreview?: string;
 }
 
 export interface TestAnalysis {
@@ -140,4 +152,43 @@ export interface PRCompassReport {
   affectedAreas: string[];
   testAnalysis: TestAnalysis;
   warnings: string[];
+}
+
+// --- AI Copilot & Code Intelligence Types ---
+export interface AIChatMessage {
+  id: string;
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  timestamp: string;
+  codeSnippet?: string;
+  fileReference?: string;
+  isStreaming?: boolean;
+}
+
+export interface AIGeneratedTest {
+  targetFile: string;
+  suggestedPath: string;
+  framework: string;
+  code: string;
+  rationale: string;
+  testCasesCovered: string[];
+}
+
+export interface AIPRReview {
+  summary: string;
+  riskLevel: 'low' | 'medium' | 'high';
+  impactAssessment: string;
+  keyChanges: string[];
+  suggestedReviewFocus: string[];
+  generatedMarkdownPR: string;
+}
+
+// --- Integrated Terminal Types ---
+export type TerminalTab = 'interactive' | 'doctor' | 'explore' | 'pr-check';
+
+export interface TerminalOutputLine {
+  id: string;
+  text: string;
+  type: 'command' | 'output' | 'error' | 'success' | 'info';
+  timestamp?: string;
 }

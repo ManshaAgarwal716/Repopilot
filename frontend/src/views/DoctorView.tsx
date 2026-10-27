@@ -11,6 +11,7 @@ import {
   Layers,
   Wrench,
   ListOrdered,
+  Terminal,
 } from 'lucide-react';
 import { DoctorReport, RepositoryItem } from '../types';
 import { Card, CardHeader, CardContent } from '../components/common/Card';
@@ -122,9 +123,18 @@ export const DoctorView: React.FC<DoctorViewProps> = ({
               Viewing simulated diagnostics for <strong className="text-charcoal-100 font-mono">{activeRepo.name}</strong>.
             </span>
           </div>
-          <Badge variant="cyan" size="sm">
-            Demo Mode
-          </Badge>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => window.dispatchEvent(new CustomEvent('repopilot:terminal', { detail: { command: 'repopilot doctor .' } }))}
+              className="px-2.5 py-1 rounded bg-charcoal-800 hover:bg-charcoal-750 text-emerald-400 font-mono text-[11px] border border-charcoal-700 flex items-center gap-1.5 transition-colors"
+            >
+              <Terminal className="w-3 h-3" />
+              <span>Run in Terminal</span>
+            </button>
+            <Badge variant="cyan" size="sm">
+              Demo Mode
+            </Badge>
+          </div>
         </div>
       )}
 

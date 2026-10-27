@@ -156,6 +156,13 @@ export const PRCompassView: React.FC<PRCompassViewProps> = ({
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => window.dispatchEvent(new CustomEvent('repopilot:terminal', { detail: { command: 'repopilot pr-check --base main' } }))}
+              className="px-2.5 py-1.5 rounded-lg bg-charcoal-800 hover:bg-charcoal-750 text-indigo-300 font-mono text-xs border border-charcoal-700 flex items-center gap-1.5 transition-colors"
+            >
+              <Terminal className="w-3.5 h-3.5 text-indigo-400" />
+              <span>Run in Terminal</span>
+            </button>
             {report.uncommitted.hasUncommitted ? (
               <Badge variant="amber" dot size="md">
                 Uncommitted Changes in Working Tree
@@ -309,10 +316,12 @@ export const PRCompassView: React.FC<PRCompassViewProps> = ({
               </div>
               <div className="col-span-3 sm:col-span-2">
                 {mapping.hasPotentialGap ? (
-                  <Badge variant="amber" size="sm">
-                    <AlertTriangle className="w-3 h-3 text-amber-400" />
-                    Potential Gap
-                  </Badge>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <Badge variant="amber" size="sm">
+                      <AlertTriangle className="w-3 h-3 text-amber-400" />
+                      Potential Gap
+                    </Badge>
+                  </div>
                 ) : mapping.relatedTests.length > 0 ? (
                   <Badge variant="emerald" size="sm">
                     <CheckCircle2 className="w-3 h-3 text-emerald-400" />
