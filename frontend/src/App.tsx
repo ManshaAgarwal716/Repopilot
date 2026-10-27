@@ -14,10 +14,26 @@ import {
   DEMO_PR_COMPASS_REPORT,
 } from './data/demoData';
 
+const DEFAULT_WORKSPACE_REPO: RepositoryItem = {
+  id: 'workspace-repopilot',
+  name: 'repopilot',
+  path: '/Users/apple12390/repopilot',
+  originType: 'local',
+  isDemo: false,
+  projectType: 'python',
+  lastOpened: 'Just now',
+  branch: 'main',
+  defaultBranch: 'main',
+  description: 'Current local workspace repository',
+};
+
 export const App: React.FC = () => {
   const [activeScreen, setActiveScreen] = useState<ActiveScreen>('dashboard');
-  const [recentRepos, setRecentRepos] = useState<RepositoryItem[]>(DEMO_REPOSITORIES);
-  const [activeRepo, setActiveRepo] = useState<RepositoryItem | null>(DEMO_REPOSITORIES[0]);
+  const [recentRepos, setRecentRepos] = useState<RepositoryItem[]>([
+    DEFAULT_WORKSPACE_REPO,
+    ...DEMO_REPOSITORIES,
+  ]);
+  const [activeRepo, setActiveRepo] = useState<RepositoryItem | null>(DEFAULT_WORKSPACE_REPO);
   const [isTerminalOpen, setIsTerminalOpen] = useState(false);
   const [terminalCommand, setTerminalCommand] = useState('repopilot doctor .');
   const [selectedCodeFile, setSelectedCodeFile] = useState<{

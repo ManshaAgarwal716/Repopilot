@@ -51,7 +51,7 @@ export const Layout: React.FC<LayoutProps> = ({
   }, [toggleTerminal]);
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-charcoal-950 text-charcoal-200">
+    <div className="flex h-screen w-screen overflow-hidden bg-slate-50 text-slate-800">
       {/* Sidebar */}
       <Sidebar
         activeScreen={activeScreen}
@@ -76,7 +76,7 @@ export const Layout: React.FC<LayoutProps> = ({
           onNavigate={onNavigate}
         />
 
-        <main className="flex-1 overflow-y-auto p-4 lg:p-6 bg-charcoal-950">
+        <main className="flex-1 overflow-y-auto p-4 lg:p-6 bg-slate-50">
           <div className="max-w-7xl mx-auto space-y-6">
             {children}
           </div>

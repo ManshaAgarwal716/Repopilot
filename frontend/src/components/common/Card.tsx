@@ -16,9 +16,9 @@ export const Card: React.FC<CardProps> = ({
   return (
     <div
       onClick={onClick}
-      className={`bg-charcoal-900 border border-charcoal-750/70 rounded-xl transition-all duration-150 ${
+      className={`bg-white border border-slate-200/90 rounded-xl shadow-xs transition-all duration-150 ${
         hoverable
-          ? 'hover:border-charcoal-600 hover:bg-charcoal-850 cursor-pointer'
+          ? 'hover:border-slate-300 hover:shadow-sm cursor-pointer'
           : ''
       } ${className}`}
     >
@@ -34,10 +34,10 @@ export const CardHeader: React.FC<{
   className?: string;
 }> = ({ title, subtitle, action, className = '' }) => {
   return (
-    <div className={`p-4 border-b border-charcoal-750/70 flex items-center justify-between ${className}`}>
+    <div className={`p-4 border-b border-slate-100 flex items-center justify-between ${className}`}>
       <div>
-        <h3 className="text-sm font-semibold text-charcoal-100 flex items-center gap-2">{title}</h3>
-        {subtitle && <p className="text-xs text-charcoal-400 mt-0.5">{subtitle}</p>}
+        <h3 className="text-sm font-semibold text-slate-900 flex items-center gap-2">{title}</h3>
+        {subtitle && <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>}
       </div>
       {action && <div>{action}</div>}
     </div>

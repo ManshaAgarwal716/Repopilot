@@ -46,11 +46,11 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
   const current = screenTitles[activeScreen] || screenTitles.dashboard;
 
   return (
-    <header className="h-14 bg-charcoal-900 border-b border-charcoal-800/80 px-4 lg:px-6 flex items-center justify-between shrink-0 select-none">
+    <header className="h-14 bg-white border-b border-slate-200 px-4 lg:px-6 flex items-center justify-between shrink-0 select-none">
       <div className="flex items-center gap-3">
         <button
           onClick={onOpenMobileSidebar}
-          className="p-1.5 rounded-lg text-charcoal-400 hover:text-charcoal-100 hover:bg-charcoal-800 lg:hidden focus:outline-none"
+          className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 lg:hidden focus:outline-none"
           aria-label="Open sidebar"
         >
           <Menu className="w-5 h-5" />
@@ -58,25 +58,25 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
 
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-sm font-semibold text-charcoal-100">{current.title}</h1>
+            <h1 className="text-sm font-semibold text-slate-900">{current.title}</h1>
             {activeRepo && (
-              <span className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-mono text-charcoal-400">
-                <span className="text-charcoal-600">/</span>
-                <span className="text-charcoal-200 font-medium">{activeRepo.name}</span>
+              <span className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-mono text-slate-500">
+                <span className="text-slate-300">/</span>
+                <span className="text-slate-800 font-medium">{activeRepo.name}</span>
                 {activeRepo.originType === 'github' ? (
-                  <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded bg-purple-950/70 text-purple-300 border border-purple-800/50">
+                  <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200 font-sans font-medium">
                     <Globe className="w-2.5 h-2.5" />
-                    GitHub Remote
+                    GitHub
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded bg-charcoal-800 text-charcoal-400 border border-charcoal-700">
+                  <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-600 border border-slate-200 font-sans font-medium">
                     Local
                   </span>
                 )}
               </span>
             )}
           </div>
-          <p className="text-xs text-charcoal-400 hidden md:block mt-0.5">{current.subtitle}</p>
+          <p className="text-xs text-slate-500 hidden md:block mt-0.5">{current.subtitle}</p>
         </div>
       </div>
 
@@ -87,15 +87,15 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
             onClick={() => onNavigate(activeScreen === 'ai-copilot' ? 'dashboard' : 'ai-copilot')}
             className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-all ${
               activeScreen === 'ai-copilot'
-                ? 'bg-brand-cyan/20 text-brand-cyan border-brand-cyan/50 shadow-sm'
-                : 'bg-charcoal-850 hover:bg-charcoal-800 text-charcoal-300 hover:text-brand-cyan border-charcoal-750'
+                ? 'bg-purple-50 text-purple-700 border-purple-300 shadow-xs'
+                : 'bg-white hover:bg-slate-50 text-slate-700 hover:text-purple-700 border-slate-200 shadow-xs'
             }`}
             title="Toggle AI Copilot Mode"
           >
-            <Sparkles className="w-3.5 h-3.5 text-brand-cyan" />
-            <span className="hidden sm:inline">AI Mode</span>
+            <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+            <span className="hidden sm:inline">AI Copilot</span>
             {activeScreen === 'ai-copilot' && (
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-cyan animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-purple-600 animate-pulse" />
             )}
           </button>
         )}
@@ -106,14 +106,14 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
             onClick={onToggleTerminal}
             className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-mono border transition-all ${
               isTerminalOpen
-                ? 'bg-emerald-950/60 text-emerald-400 border-emerald-700/60'
-                : 'bg-charcoal-850 hover:bg-charcoal-800 text-charcoal-300 hover:text-emerald-400 border-charcoal-750'
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-300 font-medium'
+                : 'bg-white hover:bg-slate-50 text-slate-700 hover:text-emerald-700 border-slate-200 shadow-xs'
             }`}
             title="Toggle Integrated Terminal Drawer (Ctrl+`)"
           >
-            <Terminal className="w-3.5 h-3.5 text-emerald-400" />
+            <Terminal className="w-3.5 h-3.5 text-emerald-600" />
             <span className="hidden sm:inline">Terminal</span>
-            <span className="hidden md:inline text-[10px] px-1 py-0.2 rounded bg-charcoal-800 text-charcoal-400 border border-charcoal-700">
+            <span className="hidden md:inline text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-500 border border-slate-200">
               ^`
             </span>
           </button>
@@ -122,9 +122,9 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
         {/* Switch / Select Repo Button */}
         <button
           onClick={onOpenRepoSelector}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-charcoal-800 hover:bg-charcoal-750 border border-charcoal-700 text-xs font-medium text-charcoal-200 transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 text-xs font-medium text-slate-700 hover:text-slate-900 shadow-xs transition-colors"
         >
-          <FolderGit2 className="w-3.5 h-3.5 text-charcoal-400" />
+          <FolderGit2 className="w-3.5 h-3.5 text-slate-500" />
           <span>{activeRepo ? 'Switch Repo' : 'Select Repo'}</span>
         </button>
 
@@ -133,7 +133,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
             href={activeRepo.remoteUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-charcoal-400 hover:text-charcoal-200 hover:bg-charcoal-850 transition-colors"
+            className="hidden sm:inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-medium text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors"
             title="View on GitHub"
           >
             <ExternalLink className="w-3.5 h-3.5" />

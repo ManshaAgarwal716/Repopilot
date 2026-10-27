@@ -4,15 +4,15 @@
 
 @layer base {
   html {
-    color-scheme: dark;
+    color-scheme: light;
   }
 
   body {
-    @apply bg-charcoal-950 text-charcoal-200 min-h-screen font-sans;
+    @apply bg-slate-50 text-slate-800 min-h-screen font-sans antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
-  /* Custom subtle scrollbars for IDE look */
+  /* Custom clean subtle scrollbars */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -23,12 +23,12 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-charcoal-700/60 rounded-full hover:bg-charcoal-600;
+    @apply bg-slate-300 rounded-full hover:bg-slate-400;
   }
 }
 
 @layer utilities {
   .subtle-ring {
-    @apply focus:outline-none focus:ring-1 focus:ring-brand-cyan/40 focus:border-brand-cyan/40;
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500;
   }
 }

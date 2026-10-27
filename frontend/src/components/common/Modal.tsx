@@ -31,23 +31,23 @@ export const Modal: React.FC<ModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-charcoal-950/80 backdrop-blur-sm animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs animate-fadeIn">
       <div
-        className={`w-full ${maxWidth} bg-charcoal-900 border border-charcoal-700/80 rounded-2xl shadow-2xl overflow-hidden`}
+        className={`w-full ${maxWidth} bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden`}
         role="dialog"
         aria-modal="true"
       >
-        <div className="flex items-center justify-between p-4 border-b border-charcoal-800">
+        <div className="flex items-center justify-between p-4 border-b border-slate-100">
           <div>
-            <h3 className="text-base font-semibold text-charcoal-100">{title}</h3>
-            {description && <p className="text-xs text-charcoal-400 mt-0.5">{description}</p>}
+            <h3 className="text-base font-semibold text-slate-900">{title}</h3>
+            {description && <p className="text-xs text-slate-500 mt-0.5">{description}</p>}
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-charcoal-400 hover:text-charcoal-200 hover:bg-charcoal-800 transition-colors"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
             aria-label="Close modal"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
         <div className="p-5">{children}</div>

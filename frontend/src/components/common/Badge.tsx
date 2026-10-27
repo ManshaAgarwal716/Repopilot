@@ -12,40 +12,40 @@ interface BadgeProps {
 
 const variantStyles: Record<BadgeVariant, { bg: string; text: string; border: string; dot: string }> = {
   emerald: {
-    bg: 'bg-emerald-950/40',
-    text: 'text-emerald-300',
-    border: 'border-emerald-800/40',
-    dot: 'bg-emerald-400',
+    bg: 'bg-emerald-50',
+    text: 'text-emerald-700',
+    border: 'border-emerald-200',
+    dot: 'bg-emerald-500',
   },
   amber: {
-    bg: 'bg-amber-950/40',
-    text: 'text-amber-300',
-    border: 'border-amber-800/40',
-    dot: 'bg-amber-400',
+    bg: 'bg-amber-50',
+    text: 'text-amber-800',
+    border: 'border-amber-200',
+    dot: 'bg-amber-500',
   },
   rose: {
-    bg: 'bg-rose-950/40',
-    text: 'text-rose-300',
-    border: 'border-rose-800/40',
-    dot: 'bg-rose-400',
+    bg: 'bg-rose-50',
+    text: 'text-rose-700',
+    border: 'border-rose-200',
+    dot: 'bg-rose-500',
   },
   cyan: {
-    bg: 'bg-cyan-950/40',
-    text: 'text-cyan-300',
-    border: 'border-cyan-800/40',
-    dot: 'bg-cyan-400',
+    bg: 'bg-sky-50',
+    text: 'text-sky-700',
+    border: 'border-sky-200',
+    dot: 'bg-sky-500',
   },
   indigo: {
-    bg: 'bg-indigo-950/40',
-    text: 'text-indigo-300',
-    border: 'border-indigo-800/40',
-    dot: 'bg-indigo-400',
+    bg: 'bg-indigo-50',
+    text: 'text-indigo-700',
+    border: 'border-indigo-200',
+    dot: 'bg-indigo-500',
   },
   zinc: {
-    bg: 'bg-charcoal-800/60',
-    text: 'text-charcoal-300',
-    border: 'border-charcoal-700/60',
-    dot: 'bg-charcoal-400',
+    bg: 'bg-slate-100',
+    text: 'text-slate-700',
+    border: 'border-slate-200',
+    dot: 'bg-slate-400',
   },
 };
 
@@ -61,7 +61,7 @@ export const Badge: React.FC<BadgeProps> = ({
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 font-medium rounded-full border ${v.bg} ${v.text} ${v.border} ${sizeClass} ${className}`}
+      className={`inline-flex items-center gap-1.5 font-medium rounded-md border ${v.bg} ${v.text} ${v.border} ${sizeClass} ${className}`}
     >
       {dot && <span className={`w-1.5 h-1.5 rounded-full ${v.dot}`} />}
       {children}

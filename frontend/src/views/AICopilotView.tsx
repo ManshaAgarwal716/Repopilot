@@ -120,43 +120,43 @@ export const AICopilotView: React.FC<AICopilotViewProps> = ({
   return (
     <div className="space-y-6">
       {/* AI Mode Hero Header */}
-      <div className="p-5 rounded-2xl bg-gradient-to-r from-charcoal-900 via-charcoal-900 to-indigo-950/30 border border-indigo-800/30 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="p-5 rounded-2xl bg-white border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
-            <span className="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center">
+            <span className="w-8 h-8 rounded-lg bg-purple-50 text-purple-700 border border-purple-200 flex items-center justify-center">
               <Sparkles className="w-4 h-4" />
             </span>
-            <h2 className="text-base font-bold text-charcoal-100 flex items-center gap-2">
+            <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
               RepoPilot AI Code Intelligence
               <Badge variant="indigo" size="sm">
                 AI Mode
               </Badge>
             </h2>
           </div>
-          <p className="text-xs text-charcoal-400 leading-relaxed max-w-2xl">
+          <p className="text-xs text-slate-500 leading-relaxed max-w-2xl">
             Context-aware AI copilot for codebase comprehension, automated test suite synthesis for detected coverage gaps, and pre-PR risk review.
           </p>
         </div>
 
         {/* AI Provider Switcher */}
-        <div className="flex items-center gap-2 bg-charcoal-950 p-1 rounded-xl border border-charcoal-800 shrink-0 text-xs">
+        <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200 shrink-0 text-xs">
           <button
             onClick={() => setAiProvider('local')}
             className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
               aiProvider === 'local'
-                ? 'bg-indigo-600/25 text-indigo-300 font-medium border border-indigo-500/40 shadow-sm'
-                : 'text-charcoal-400 hover:text-charcoal-200'
+                ? 'bg-white text-slate-900 font-semibold shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Cpu className="w-3.5 h-3.5" />
+            <Cpu className="w-3.5 h-3.5 text-blue-600" />
             <span>Built-in Engine</span>
           </button>
           <button
             onClick={() => setAiProvider('ollama')}
             className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
               aiProvider === 'ollama'
-                ? 'bg-indigo-600/25 text-indigo-300 font-medium border border-indigo-500/40 shadow-sm'
-                : 'text-charcoal-400 hover:text-charcoal-200'
+                ? 'bg-white text-slate-900 font-semibold shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             <span>Ollama Local</span>
@@ -165,8 +165,8 @@ export const AICopilotView: React.FC<AICopilotViewProps> = ({
             onClick={() => setAiProvider('cloud')}
             className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
               aiProvider === 'cloud'
-                ? 'bg-indigo-600/25 text-indigo-300 font-medium border border-indigo-500/40 shadow-sm'
-                : 'text-charcoal-400 hover:text-charcoal-200'
+                ? 'bg-white text-slate-900 font-semibold shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             <span>Cloud API</span>
@@ -175,16 +175,16 @@ export const AICopilotView: React.FC<AICopilotViewProps> = ({
       </div>
 
       {/* Main Tab Switcher */}
-      <div className="flex items-center gap-2 border-b border-charcoal-800 pb-3 text-xs">
+      <div className="flex items-center gap-2 border-b border-slate-200 pb-3 text-xs">
         <button
           onClick={() => setActiveTab('chat')}
           className={`px-3.5 py-1.5 rounded-lg font-medium transition-all flex items-center gap-2 ${
             activeTab === 'chat'
-              ? 'bg-charcoal-800 text-charcoal-100 border border-charcoal-700 shadow-sm'
-              : 'text-charcoal-400 hover:text-charcoal-200 hover:bg-charcoal-850'
+              ? 'bg-slate-100 text-slate-900 border border-slate-200 shadow-2xs font-semibold'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
-          <Bot className="w-4 h-4 text-brand-cyan" />
+          <Bot className="w-4 h-4 text-blue-600" />
           <span>Repository Copilot Chat</span>
         </button>
 
@@ -192,24 +192,24 @@ export const AICopilotView: React.FC<AICopilotViewProps> = ({
           onClick={() => setActiveTab('tests')}
           className={`px-3.5 py-1.5 rounded-lg font-medium transition-all flex items-center gap-2 ${
             activeTab === 'tests'
-              ? 'bg-charcoal-800 text-emerald-400 border border-charcoal-700 shadow-sm'
-              : 'text-charcoal-400 hover:text-charcoal-200 hover:bg-charcoal-850'
+              ? 'bg-slate-100 text-emerald-800 border border-slate-200 shadow-2xs font-semibold'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
-          <Code2 className="w-4 h-4 text-emerald-400" />
+          <Code2 className="w-4 h-4 text-emerald-600" />
           <span>AI Test Generator</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
         </button>
 
         <button
           onClick={() => setActiveTab('pr-review')}
           className={`px-3.5 py-1.5 rounded-lg font-medium transition-all flex items-center gap-2 ${
             activeTab === 'pr-review'
-              ? 'bg-charcoal-800 text-indigo-400 border border-charcoal-700 shadow-sm'
-              : 'text-charcoal-400 hover:text-charcoal-200 hover:bg-charcoal-850'
+              ? 'bg-slate-100 text-purple-800 border border-slate-200 shadow-2xs font-semibold'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
-          <GitPullRequest className="w-4 h-4 text-indigo-400" />
+          <GitPullRequest className="w-4 h-4 text-purple-600" />
           <span>AI PR Summary & Risk Review</span>
         </button>
       </div>
@@ -219,7 +219,7 @@ export const AICopilotView: React.FC<AICopilotViewProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Main Chat Stream */}
           <div className="lg:col-span-3 space-y-4">
-            <Card className="h-[520px] flex flex-col justify-between">
+            <Card className="h-[520px] flex flex-col justify-between shadow-2xs">
               {/* Message History */}
               <div className="p-4 overflow-y-auto space-y-4 flex-1">
                 {messages.map((msg) => (
@@ -230,7 +230,7 @@ export const AICopilotView: React.FC<AICopilotViewProps> = ({
                     }`}
                   >
                     {msg.role === 'assistant' && (
-                      <div className="w-7 h-7 rounded-lg bg-indigo-950/80 border border-indigo-800/60 text-indigo-300 flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
+                      <div className="w-7 h-7 rounded-lg bg-purple-50 border border-purple-200 text-purple-700 flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
                         <Bot className="w-4 h-4" />
                       </div>
                     )}
@@ -238,26 +238,30 @@ export const AICopilotView: React.FC<AICopilotViewProps> = ({
                     <div
                       className={`p-3.5 rounded-xl max-w-xl space-y-1.5 ${
                         msg.role === 'user'
-                          ? 'bg-charcoal-800 text-charcoal-100 border border-charcoal-700'
-                          : 'bg-charcoal-950 border border-charcoal-800 text-charcoal-200'
+                          ? 'bg-blue-600 text-white shadow-2xs'
+                          : 'bg-slate-50 border border-slate-200 text-slate-800 shadow-2xs'
                       }`}
                     >
                       <div className="whitespace-pre-wrap">{msg.content}</div>
 
                       {msg.fileReference && (
-                        <div className="pt-2 border-t border-charcoal-800/80 flex items-center gap-1.5 text-[11px] font-mono text-brand-cyan">
+                        <div className={`pt-2 border-t flex items-center gap-1.5 text-[11px] font-mono ${
+                          msg.role === 'user' ? 'border-blue-500 text-blue-100' : 'border-slate-200 text-blue-700 font-semibold'
+                        }`}>
                           <FileCode className="w-3.5 h-3.5" />
                           <span>Referenced: {msg.fileReference}</span>
                         </div>
                       )}
 
-                      <div className="text-[10px] text-charcoal-500 font-mono text-right">
+                      <div className={`text-[10px] font-mono text-right ${
+                        msg.role === 'user' ? 'text-blue-200' : 'text-slate-400'
+                      }`}>
                         {msg.timestamp}
                       </div>
                     </div>
 
                     {msg.role === 'user' && (
-                      <div className="w-7 h-7 rounded-lg bg-charcoal-800 border border-charcoal-700 text-charcoal-300 flex items-center justify-center shrink-0 mt-0.5">
+                      <div className="w-7 h-7 rounded-lg bg-slate-200 border border-slate-300 text-slate-700 flex items-center justify-center shrink-0 mt-0.5">
                         <User className="w-4 h-4" />
                       </div>
                     )}
@@ -265,12 +269,12 @@ export const AICopilotView: React.FC<AICopilotViewProps> = ({
                 ))}
 
                 {isTyping && (
-                  <div className="flex items-center gap-3 text-xs text-charcoal-400">
-                    <div className="w-7 h-7 rounded-lg bg-indigo-950/80 border border-indigo-800/60 text-indigo-300 flex items-center justify-center shrink-0">
+                  <div className="flex items-center gap-3 text-xs text-slate-500">
+                    <div className="w-7 h-7 rounded-lg bg-purple-50 border border-purple-200 text-purple-700 flex items-center justify-center shrink-0">
                       <Bot className="w-4 h-4 animate-pulse" />
                     </div>
-                    <div className="p-3 bg-charcoal-950 border border-charcoal-800 rounded-xl text-charcoal-400 flex items-center gap-2">
-                      <RefreshCw className="w-3.5 h-3.5 animate-spin text-brand-cyan" />
+                    <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-600 flex items-center gap-2 shadow-2xs">
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin text-blue-600" />
                       <span>RepoPilot AI is reasoning over repository context...</span>
                     </div>
                   </div>
@@ -278,7 +282,7 @@ export const AICopilotView: React.FC<AICopilotViewProps> = ({
               </div>
 
               {/* Chat Input */}
-              <div className="p-3 border-t border-charcoal-800/80 bg-charcoal-950/50">
+              <div className="p-3 border-t border-slate-200 bg-slate-50/60">
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
@@ -291,12 +295,12 @@ export const AICopilotView: React.FC<AICopilotViewProps> = ({
                     value={userInput}
                     onChange={(e) => setUserInput(e.target.value)}
                     placeholder="Ask AI anything about architecture, test gaps, entry points, or dependencies..."
-                    className="flex-1 bg-charcoal-900 border border-charcoal-750 rounded-xl px-3.5 py-2 text-xs text-charcoal-100 placeholder:text-charcoal-500 focus:outline-none focus:border-indigo-500"
+                    className="flex-1 bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-500 shadow-2xs"
                   />
                   <button
                     type="submit"
                     disabled={!userInput.trim() || isTyping}
-                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white rounded-xl text-xs font-medium transition-colors flex items-center gap-1.5"
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-xl text-xs font-medium transition-colors flex items-center gap-1.5 shadow-2xs"
                   >
                     <span>Send</span>
                     <Send className="w-3.5 h-3.5" />
@@ -323,21 +327,21 @@ export const AICopilotView: React.FC<AICopilotViewProps> = ({
                   <button
                     key={idx}
                     onClick={() => handleSendMessage(prompt)}
-                    className="w-full text-left p-2.5 rounded-lg bg-charcoal-950 hover:bg-charcoal-850 border border-charcoal-800 text-xs text-charcoal-300 hover:text-charcoal-100 transition-colors flex items-center justify-between group"
+                    className="w-full text-left p-2.5 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs text-slate-700 hover:text-slate-900 transition-colors flex items-center justify-between group shadow-2xs"
                   >
                     <span className="truncate">{prompt}</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-charcoal-500 group-hover:text-brand-cyan shrink-0 ml-1 transition-transform group-hover:translate-x-0.5" />
+                    <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600 shrink-0 ml-1 transition-transform group-hover:translate-x-0.5" />
                   </button>
                 ))}
               </CardContent>
             </Card>
 
-            <Card className="p-4 bg-charcoal-900 border-charcoal-800 text-xs space-y-2">
-              <div className="flex items-center gap-2 text-charcoal-200 font-semibold">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+            <Card className="p-4 bg-white border-slate-200 text-xs space-y-2 shadow-2xs">
+              <div className="flex items-center gap-2 text-slate-900 font-semibold">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
                 <span>Offline Privacy Safe</span>
               </div>
-              <p className="text-[11px] text-charcoal-400 leading-relaxed">
+              <p className="text-[11px] text-slate-500 leading-relaxed">
                 RepoPilot AI analysis runs strictly over localized metadata and syntax structures. Your credentials, .env files, and private keys are never transmitted.
               </p>
             </Card>
@@ -363,10 +367,10 @@ export const AICopilotView: React.FC<AICopilotViewProps> = ({
                       <button
                         key={file}
                         onClick={() => setSelectedTestFile(file)}
-                        className={`w-full text-left p-3 rounded-xl border transition-all ${
+                        className={`w-full text-left p-3 rounded-xl border transition-all shadow-2xs ${
                           isSelected
-                            ? 'bg-emerald-950/20 border-emerald-800/60 text-charcoal-100'
-                            : 'bg-charcoal-950 border-charcoal-800 hover:bg-charcoal-850 text-charcoal-300'
+                            ? 'bg-blue-50/80 border-blue-300 text-slate-900'
+                            : 'bg-white border-slate-200 hover:bg-slate-50 text-slate-700'
                         }`}
                       >
                         <div className="flex items-center justify-between mb-1">
@@ -375,8 +379,8 @@ export const AICopilotView: React.FC<AICopilotViewProps> = ({
                             Gap
                           </Badge>
                         </div>
-                        <p className="text-[11px] text-charcoal-400">
-                          Suggested: <code className="text-emerald-400 font-mono">{DEMO_AI_GENERATED_TESTS[file].suggestedPath}</code>
+                        <p className="text-[11px] text-slate-500">
+                          Suggested: <code className="text-blue-700 font-mono font-medium">{DEMO_AI_GENERATED_TESTS[file].suggestedPath}</code>
                         </p>
                       </button>
                     );
@@ -385,17 +389,17 @@ export const AICopilotView: React.FC<AICopilotViewProps> = ({
               </Card>
 
               {currentTestScaffold && (
-                <Card className="p-4 space-y-2 text-xs">
-                  <span className="font-semibold text-charcoal-200 block">AI Rationale:</span>
-                  <p className="text-charcoal-400 leading-relaxed text-[11px]">
+                <Card className="p-4 space-y-2 text-xs shadow-2xs">
+                  <span className="font-semibold text-slate-900 block">AI Rationale:</span>
+                  <p className="text-slate-600 leading-relaxed text-[11px]">
                     {currentTestScaffold.rationale}
                   </p>
-                  <div className="pt-2 border-t border-charcoal-800">
-                    <span className="text-[10px] text-charcoal-500 font-mono uppercase block mb-1">Test Cases Generated:</span>
+                  <div className="pt-2 border-t border-slate-200">
+                    <span className="text-[10px] text-slate-500 font-mono uppercase block mb-1">Test Cases Generated:</span>
                     <ul className="space-y-1">
                       {currentTestScaffold.testCasesCovered.map((tc, idx) => (
-                        <li key={idx} className="text-[11px] text-charcoal-300 font-mono flex items-center gap-1.5">
-                          <CheckCircle2 className="w-3 h-3 text-emerald-400 shrink-0" />
+                        <li key={idx} className="text-[11px] text-slate-700 font-mono flex items-center gap-1.5">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
                           <span className="truncate">{tc}</span>
                         </li>
                       ))}
@@ -408,12 +412,12 @@ export const AICopilotView: React.FC<AICopilotViewProps> = ({
             {/* Code Output Panel */}
             <div className="lg:col-span-8">
               {currentTestScaffold ? (
-                <Card className="flex flex-col h-full">
+                <Card className="flex flex-col h-full shadow-2xs">
                   <CardHeader
                     title={
                       <div className="flex items-center gap-2 font-mono text-xs">
-                        <FileCode className="w-4 h-4 text-emerald-400" />
-                        <span>{currentTestScaffold.suggestedPath}</span>
+                        <FileCode className="w-4 h-4 text-emerald-600" />
+                        <span className="text-slate-900 font-semibold">{currentTestScaffold.suggestedPath}</span>
                         <Badge variant="emerald" size="sm">
                           {currentTestScaffold.framework}
                         </Badge>
@@ -423,19 +427,19 @@ export const AICopilotView: React.FC<AICopilotViewProps> = ({
                     action={
                       <button
                         onClick={handleCopyTestCode}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 text-xs font-medium transition-colors"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 text-xs font-medium transition-colors shadow-2xs"
                       >
                         {copiedCode ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                         <span>{copiedCode ? 'Copied Suite!' : 'Copy Code'}</span>
                       </button>
                     }
                   />
-                  <div className="p-4 bg-charcoal-950 font-mono text-xs overflow-x-auto flex-1 border-t border-charcoal-800/80">
-                    <pre className="text-charcoal-200 leading-relaxed whitespace-pre font-mono">
+                  <div className="p-4 bg-slate-50 font-mono text-xs overflow-x-auto flex-1 border-t border-slate-200">
+                    <pre className="text-slate-800 leading-relaxed whitespace-pre font-mono">
                       {currentTestScaffold.code}
                     </pre>
                   </div>
-                  <div className="p-3 bg-charcoal-900 border-t border-charcoal-800 flex items-center justify-between text-xs text-charcoal-400 font-mono">
+                  <div className="p-3 bg-white border-t border-slate-200 flex items-center justify-between text-xs text-slate-500 font-mono">
                     <span>Save to: {currentTestScaffold.suggestedPath}</span>
                     <span>Run: pytest {currentTestScaffold.suggestedPath}</span>
                   </div>
@@ -451,34 +455,34 @@ export const AICopilotView: React.FC<AICopilotViewProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* PR Assessment Overview */}
           <div className="lg:col-span-5 space-y-4">
-            <Card className="p-5 space-y-4">
+            <Card className="p-5 space-y-4 shadow-2xs">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono text-charcoal-400 uppercase">PR RISK SCORE</span>
+                <span className="text-xs font-mono text-slate-500 uppercase">PR RISK SCORE</span>
                 <Badge variant="emerald" size="md" dot>
                   LOW RISK (Safe to Merge)
                 </Badge>
               </div>
 
               <div>
-                <h3 className="text-sm font-semibold text-charcoal-100">Executive Summary</h3>
-                <p className="text-xs text-charcoal-400 mt-1 leading-relaxed">
+                <h3 className="text-sm font-semibold text-slate-900">Executive Summary</h3>
+                <p className="text-xs text-slate-600 mt-1 leading-relaxed">
                   {DEMO_AI_PR_REVIEW.summary}
                 </p>
               </div>
 
-              <div className="p-3 rounded-xl bg-charcoal-950 border border-charcoal-800 text-xs space-y-1">
-                <span className="text-charcoal-300 font-semibold block">Impact Assessment:</span>
-                <p className="text-charcoal-400 text-[11px] leading-relaxed">
+              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-1 shadow-2xs">
+                <span className="text-slate-800 font-semibold block">Impact Assessment:</span>
+                <p className="text-slate-600 text-[11px] leading-relaxed">
                   {DEMO_AI_PR_REVIEW.impactAssessment}
                 </p>
               </div>
 
               <div>
-                <span className="text-xs font-semibold text-charcoal-200 block mb-2">Recommended Reviewer Focus:</span>
-                <ul className="space-y-1.5 text-xs text-charcoal-400">
+                <span className="text-xs font-semibold text-slate-800 block mb-2">Recommended Reviewer Focus:</span>
+                <ul className="space-y-1.5 text-xs text-slate-600">
                   {DEMO_AI_PR_REVIEW.suggestedReviewFocus.map((focus, idx) => (
                     <li key={idx} className="flex items-start gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-brand-cyan shrink-0 mt-1.5" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0 mt-1.5" />
                       <span>{focus}</span>
                     </li>
                   ))}
@@ -489,22 +493,22 @@ export const AICopilotView: React.FC<AICopilotViewProps> = ({
 
           {/* Generated Markdown PR Description */}
           <div className="lg:col-span-7">
-            <Card className="h-full flex flex-col">
+            <Card className="h-full flex flex-col shadow-2xs">
               <CardHeader
                 title="Generated Pull Request Description"
                 subtitle="Standard GitHub markdown ready to paste into your pull request"
                 action={
                   <button
                     onClick={handleCopyPRMarkdown}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 text-xs font-medium transition-colors"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 text-xs font-medium transition-colors shadow-2xs"
                   >
                     {copiedPR ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                     <span>{copiedPR ? 'Copied Markdown!' : 'Copy PR Description'}</span>
                   </button>
                 }
               />
-              <div className="p-4 bg-charcoal-950 font-mono text-xs overflow-x-auto flex-1 border-t border-charcoal-800">
-                <pre className="text-charcoal-200 leading-relaxed whitespace-pre font-mono text-[11px]">
+              <div className="p-4 bg-slate-50 font-mono text-xs overflow-x-auto flex-1 border-t border-slate-200">
+                <pre className="text-slate-800 leading-relaxed whitespace-pre font-mono text-[11px]">
                   {DEMO_AI_PR_REVIEW.generatedMarkdownPR}
                 </pre>
               </div>

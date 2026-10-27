@@ -56,12 +56,12 @@ const TreeNodeItem: React.FC<{
 
   const getFileIcon = (name: string) => {
     if (name.endsWith('.py') || name.endsWith('.ts') || name.endsWith('.js')) {
-      return <FileCode className="w-3.5 h-3.5 text-cyan-400" />;
+      return <FileCode className="w-3.5 h-3.5 text-blue-600" />;
     }
     if (name.endsWith('.toml') || name.endsWith('.json') || name.endsWith('.yaml') || name.endsWith('.yml')) {
-      return <FileCheck className="w-3.5 h-3.5 text-amber-400" />;
+      return <FileCheck className="w-3.5 h-3.5 text-amber-600" />;
     }
-    return <FileText className="w-3.5 h-3.5 text-charcoal-400" />;
+    return <FileText className="w-3.5 h-3.5 text-slate-500" />;
   };
 
   return (
@@ -70,12 +70,12 @@ const TreeNodeItem: React.FC<{
         onClick={() => isDirectory && setIsOpen(!isOpen)}
         style={{ paddingLeft: `${level * 16 + 12}px` }}
         className={`flex items-center justify-between py-1.5 pr-3 text-xs font-mono transition-colors rounded-md group ${
-          isDirectory ? 'cursor-pointer hover:bg-charcoal-850/70 text-charcoal-200' : 'hover:bg-charcoal-850/40 text-charcoal-300'
+          isDirectory ? 'cursor-pointer hover:bg-slate-100 text-slate-900' : 'hover:bg-slate-50 text-slate-700'
         }`}
       >
         <div className="flex items-center gap-1.5 min-w-0">
           {isDirectory ? (
-            <span className="text-charcoal-500 group-hover:text-charcoal-300 transition-colors">
+            <span className="text-slate-400 group-hover:text-slate-700 transition-colors">
               {isOpen ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
             </span>
           ) : (
@@ -84,26 +84,26 @@ const TreeNodeItem: React.FC<{
 
           {isDirectory ? (
             isOpen ? (
-              <FolderOpen className="w-3.5 h-3.5 text-brand-cyan shrink-0" />
+              <FolderOpen className="w-3.5 h-3.5 text-blue-600 shrink-0" />
             ) : (
-              <Folder className="w-3.5 h-3.5 text-brand-cyan/80 shrink-0" />
+              <Folder className="w-3.5 h-3.5 text-blue-500 shrink-0" />
             )
           ) : (
             <span className="shrink-0">{getFileIcon(node.name)}</span>
           )}
 
-          <span className={`truncate ${isDirectory ? 'font-medium text-charcoal-100' : 'text-charcoal-300'}`}>
+          <span className={`truncate ${isDirectory ? 'font-semibold text-slate-900' : 'text-slate-700'}`}>
             {node.name}
           </span>
           {node.isSymlink && (
-            <span className="text-[10px] text-amber-400 font-sans px-1 bg-amber-950/40 border border-amber-800/40 rounded">
+            <span className="text-[10px] text-amber-700 font-sans px-1 bg-amber-50 border border-amber-200 rounded">
               symlink
             </span>
           )}
         </div>
 
         {!isDirectory && node.sizeBytes !== undefined && (
-          <span className="text-[10px] text-charcoal-500 font-mono shrink-0 ml-2">
+          <span className="text-[10px] text-slate-400 font-mono shrink-0 ml-2">
             {formatSize(node.sizeBytes)}
           </span>
         )}
@@ -153,15 +153,15 @@ export const ExplorerView: React.FC<ExplorerViewProps> = ({
   // Loading state while live Python engine analyzes
   if (isLoading) {
     return (
-      <div className="p-12 rounded-2xl bg-charcoal-900 border border-charcoal-800 text-center flex flex-col items-center justify-center space-y-4">
-        <div className="w-14 h-14 rounded-2xl bg-cyan-950/60 border border-cyan-800/60 flex items-center justify-center text-brand-cyan shadow-lg">
+      <div className="p-12 rounded-2xl bg-white border border-slate-200 text-center flex flex-col items-center justify-center space-y-4 shadow-xs">
+        <div className="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 shadow-xs">
           <Sparkles className="w-7 h-7 animate-spin" />
         </div>
         <div className="space-y-1.5">
-          <h3 className="text-sm font-semibold text-charcoal-100 font-mono">
+          <h3 className="text-sm font-semibold text-slate-900 font-mono">
             Analyzing Codebase Architecture: {activeRepo.name}
           </h3>
-          <p className="text-xs text-charcoal-400 max-w-md mx-auto leading-relaxed">
+          <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
             RepoPilot engine is traversing directories, identifying key entry points, and classifying configuration manifests...
           </p>
         </div>
@@ -177,22 +177,22 @@ export const ExplorerView: React.FC<ExplorerViewProps> = ({
           <CardHeader
             title={
               <span className="flex items-center gap-2">
-                <FolderTree className="w-4 h-4 text-brand-cyan" />
+                <FolderTree className="w-4 h-4 text-blue-600" />
                 <span>Explore Codebase: {activeRepo.name}</span>
               </span>
             }
             subtitle="Live directory traversal, configuration role analysis, and architectural starting points"
           />
           <CardContent className="space-y-4">
-            <p className="text-xs text-charcoal-400 leading-relaxed">
-              Target repository: <code className="font-mono text-charcoal-200 bg-charcoal-950 px-1.5 py-0.5 rounded border border-charcoal-800">{activeRepo.path}</code>. Click below to run live architectural inspection.
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Target repository: <code className="font-mono text-slate-800 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">{activeRepo.path}</code>. Click below to run live architectural inspection.
             </p>
 
             <div className="flex flex-wrap items-center gap-3">
               {onReanalyze && (
                 <button
                   onClick={onReanalyze}
-                  className="px-4 py-2 rounded-lg bg-brand-cyan hover:bg-cyan-400 text-charcoal-950 text-xs font-semibold flex items-center gap-2 transition-colors shadow-sm"
+                  className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-2 transition-colors shadow-xs"
                 >
                   <FolderTree className="w-4 h-4" />
                   <span>Analyze Codebase Now</span>
@@ -206,9 +206,9 @@ export const ExplorerView: React.FC<ExplorerViewProps> = ({
                     })
                   )
                 }
-                className="px-3.5 py-2 rounded-lg bg-charcoal-850 hover:bg-charcoal-800 text-charcoal-300 border border-charcoal-700 text-xs font-mono transition-colors flex items-center gap-1.5"
+                className="px-3.5 py-2 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-mono transition-colors flex items-center gap-1.5 shadow-2xs"
               >
-                <Terminal className="w-3.5 h-3.5 text-emerald-400" />
+                <Terminal className="w-3.5 h-3.5 text-emerald-600" />
                 <span>Run in Terminal</span>
               </button>
             </div>
@@ -227,18 +227,18 @@ export const ExplorerView: React.FC<ExplorerViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Live Active Repository Banner */}
-      <div className="p-3 bg-charcoal-900 border border-charcoal-800 rounded-xl flex items-center justify-between text-xs">
+      <div className="p-3 bg-white border border-slate-200 rounded-xl flex items-center justify-between text-xs shadow-2xs">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-charcoal-200">
-            Active inspection for <strong className="text-charcoal-100 font-mono">{activeRepo.name}</strong> ({report.totalEntries} entries scanned, depth {report.maxDepth}).
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="text-slate-700">
+            Active inspection for <strong className="text-slate-900 font-mono">{activeRepo.name}</strong> ({report.totalEntries} entries scanned, depth {report.maxDepth}).
           </span>
         </div>
         <div className="flex items-center gap-2">
           {onReanalyze && (
             <button
               onClick={onReanalyze}
-              className="px-2 py-1 rounded bg-charcoal-800 hover:bg-charcoal-750 text-charcoal-300 text-[11px] border border-charcoal-700 transition-colors"
+              className="px-2 py-1 rounded bg-slate-50 hover:bg-slate-100 text-slate-700 text-[11px] border border-slate-200 transition-colors shadow-2xs"
             >
               Re-scan
             </button>
@@ -251,7 +251,7 @@ export const ExplorerView: React.FC<ExplorerViewProps> = ({
                 })
               )
             }
-            className="px-2.5 py-1 rounded bg-charcoal-800 hover:bg-charcoal-750 text-brand-cyan font-mono text-[11px] border border-charcoal-700 flex items-center gap-1.5 transition-colors"
+            className="px-2.5 py-1 rounded bg-slate-50 hover:bg-slate-100 text-blue-600 font-mono text-[11px] border border-slate-200 flex items-center gap-1.5 transition-colors shadow-2xs font-medium"
           >
             <Terminal className="w-3 h-3" />
             <span>Terminal</span>
@@ -271,10 +271,10 @@ export const ExplorerView: React.FC<ExplorerViewProps> = ({
             {report.overview.recognizedFrameworks.map((fw) => (
               <div
                 key={fw}
-                className="p-2.5 rounded-lg bg-charcoal-950 border border-charcoal-800 flex items-center justify-between text-xs"
+                className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between text-xs shadow-2xs"
               >
-                <span className="text-charcoal-200 font-medium">{fw}</span>
-                <CheckCircle2 className="w-3.5 h-3.5 text-brand-cyan shrink-0" />
+                <span className="text-slate-800 font-medium">{fw}</span>
+                <CheckCircle2 className="w-3.5 h-3.5 text-blue-600 shrink-0" />
               </div>
             ))}
           </CardContent>
@@ -290,11 +290,11 @@ export const ExplorerView: React.FC<ExplorerViewProps> = ({
             {report.overview.likelyEntryPoints.map((ep) => (
               <div
                 key={ep}
-                className="p-2.5 rounded-lg bg-charcoal-950 border border-charcoal-800 flex items-center justify-between text-xs font-mono"
+                className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between text-xs font-mono shadow-2xs"
               >
                 <div className="flex items-center gap-2 truncate">
-                  <Compass className="w-3.5 h-3.5 text-brand-cyan shrink-0" />
-                  <span className="text-charcoal-200 truncate">{ep}</span>
+                  <Compass className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                  <span className="text-slate-800 truncate font-semibold">{ep}</span>
                 </div>
                 <Badge variant="cyan" size="sm" className="shrink-0 ml-2">
                   Entry Point
@@ -310,14 +310,14 @@ export const ExplorerView: React.FC<ExplorerViewProps> = ({
         <CardHeader
           title={
             <span className="flex items-center gap-2">
-              <Compass className="w-4 h-4 text-brand-cyan" />
+              <Compass className="w-4 h-4 text-blue-600" />
               Suggested Starting Points for Exploration
             </span>
           }
           subtitle="Ranked starting points for an engineer exploring this codebase for the first time"
         />
-        <div className="divide-y divide-charcoal-800/80">
-          <div className="grid grid-cols-12 px-4 py-2 text-[11px] font-mono text-charcoal-500 uppercase">
+        <div className="divide-y divide-slate-100">
+          <div className="grid grid-cols-12 px-4 py-2 text-[11px] font-mono text-slate-500 uppercase bg-slate-50 border-y border-slate-200">
             <div className="col-span-5 sm:col-span-4">File / Directory</div>
             <div className="col-span-3 sm:col-span-2">Confidence</div>
             <div className="col-span-4 sm:col-span-6">Why Inspect First</div>
@@ -327,10 +327,10 @@ export const ExplorerView: React.FC<ExplorerViewProps> = ({
             return (
               <div
                 key={point.path}
-                className="grid grid-cols-12 px-4 py-3 items-center text-xs hover:bg-charcoal-850/40 transition-colors"
+                className="grid grid-cols-12 px-4 py-3 items-center text-xs hover:bg-slate-50/80 transition-colors"
               >
-                <div className="col-span-5 sm:col-span-4 font-mono font-medium text-charcoal-200 truncate flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand-cyan shrink-0" />
+                <div className="col-span-5 sm:col-span-4 font-mono font-medium text-slate-900 truncate flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0" />
                   <span className="truncate">{point.path}</span>
                 </div>
                 <div className="col-span-3 sm:col-span-2">
@@ -338,7 +338,7 @@ export const ExplorerView: React.FC<ExplorerViewProps> = ({
                     {conf.label}
                   </Badge>
                 </div>
-                <div className="col-span-4 sm:col-span-6 text-charcoal-400 text-xs leading-relaxed truncate sm:whitespace-normal">
+                <div className="col-span-4 sm:col-span-6 text-slate-600 text-xs leading-relaxed truncate sm:whitespace-normal">
                   {point.rationale}
                 </div>
               </div>
@@ -355,22 +355,22 @@ export const ExplorerView: React.FC<ExplorerViewProps> = ({
             <CardHeader
               title={
                 <span className="flex items-center gap-2">
-                  <FolderTree className="w-4 h-4 text-brand-cyan" />
+                  <FolderTree className="w-4 h-4 text-blue-600" />
                   Repository Directory Tree
                 </span>
               }
               subtitle={`Visualizing ${report.totalEntries} entries (depth limit: ${report.maxDepth})`}
             />
             {/* Search Box */}
-            <div className="p-3 border-b border-charcoal-800/80 bg-charcoal-950/40">
+            <div className="p-3 border-b border-slate-200 bg-slate-50/70">
               <div className="relative">
-                <Search className="w-3.5 h-3.5 text-charcoal-500 absolute left-3 top-2.5" />
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
                 <input
                   type="text"
                   placeholder="Filter tree files and directories..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-charcoal-900 border border-charcoal-750 rounded-lg pl-8 pr-3 py-1.5 text-xs font-mono text-charcoal-200 placeholder:text-charcoal-500 focus:outline-none focus:border-brand-cyan"
+                  className="w-full bg-white border border-slate-300 rounded-lg pl-8 pr-3 py-1.5 text-xs font-mono text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-500 shadow-2xs"
                 />
               </div>
             </div>
@@ -380,7 +380,7 @@ export const ExplorerView: React.FC<ExplorerViewProps> = ({
               <TreeNodeItem node={report.treeRoot} searchQuery={searchQuery} />
             </div>
 
-            <div className="p-2.5 border-t border-charcoal-800/80 bg-charcoal-950/40 text-[11px] text-charcoal-500 font-mono flex items-center justify-between">
+            <div className="p-2.5 border-t border-slate-200 bg-slate-50 text-[11px] text-slate-500 font-mono flex items-center justify-between">
               <span>Ignored: .git, node_modules, .venv</span>
               <span>Symlink traversal: disabled</span>
             </div>
@@ -393,22 +393,22 @@ export const ExplorerView: React.FC<ExplorerViewProps> = ({
             <CardHeader
               title={
                 <span className="flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-brand-cyan" />
+                  <FileText className="w-4 h-4 text-blue-600" />
                   Important Project Files Explained
                 </span>
               }
               subtitle="Evidence-based role classification for core repository manifests"
             />
-            <div className="divide-y divide-charcoal-800/80 overflow-y-auto max-h-[500px] flex-1">
+            <div className="divide-y divide-slate-100 overflow-y-auto max-h-[500px] flex-1">
               {report.importantFiles.map((file) => (
-                <div key={file.path} className="p-3.5 hover:bg-charcoal-850/40 transition-colors space-y-1">
+                <div key={file.path} className="p-3.5 hover:bg-slate-50/80 transition-colors space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs font-semibold text-charcoal-200">{file.path}</span>
+                    <span className="font-mono text-xs font-semibold text-slate-900">{file.path}</span>
                     <Badge variant="zinc" size="sm">
                       {file.role}
                     </Badge>
                   </div>
-                  <p className="text-xs text-charcoal-400 leading-relaxed">{file.description}</p>
+                  <p className="text-xs text-slate-600 leading-relaxed">{file.description}</p>
                 </div>
               ))}
             </div>

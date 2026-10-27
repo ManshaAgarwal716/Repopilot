@@ -24,19 +24,19 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 }) => {
   return (
     <div
-      className={`border border-dashed border-charcoal-700/80 rounded-xl p-8 text-center flex flex-col items-center justify-center bg-charcoal-900/40 ${className}`}
+      className={`border border-dashed border-slate-300 rounded-xl p-8 text-center flex flex-col items-center justify-center bg-white shadow-xs ${className}`}
     >
-      <div className="w-12 h-12 rounded-xl bg-charcoal-800/80 border border-charcoal-700 flex items-center justify-center text-charcoal-300 mb-3 shadow-inner">
+      <div className="w-12 h-12 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-500 mb-3 shadow-xs">
         <Icon className="w-6 h-6 stroke-[1.5]" />
       </div>
-      <h4 className="text-sm font-semibold text-charcoal-100 mb-1">{title}</h4>
-      <p className="text-xs text-charcoal-400 max-w-sm mb-4 leading-relaxed">{description}</p>
+      <h4 className="text-sm font-semibold text-slate-900 mb-1">{title}</h4>
+      <p className="text-xs text-slate-500 max-w-sm mb-4 leading-relaxed">{description}</p>
       {(actionText || secondaryActionText) && (
         <div className="flex flex-wrap items-center justify-center gap-2.5">
           {actionText && onAction && (
             <button
               onClick={onAction}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-brand-cyan/15 hover:bg-brand-cyan/25 text-brand-cyan border border-brand-cyan/30 text-xs font-medium transition-colors focus:outline-none focus:ring-1 focus:ring-brand-cyan"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium transition-colors shadow-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             >
               {actionText}
             </button>
@@ -44,7 +44,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           {secondaryActionText && onSecondaryAction && (
             <button
               onClick={onSecondaryAction}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-charcoal-800 hover:bg-charcoal-750 text-charcoal-300 border border-charcoal-700 text-xs font-medium transition-colors"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-medium transition-colors shadow-xs"
             >
               {secondaryActionText}
             </button>

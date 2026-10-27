@@ -145,7 +145,7 @@ export const RepoSelectorModal: React.FC<RepoSelectorModalProps> = ({
     >
       <div className="space-y-4">
         {/* Navigation Tabs */}
-        <div className="flex items-center gap-1 p-1 bg-charcoal-950 rounded-lg border border-charcoal-800">
+        <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-lg border border-slate-200">
           <button
             onClick={() => {
               setActiveTab('github');
@@ -153,13 +153,13 @@ export const RepoSelectorModal: React.FC<RepoSelectorModalProps> = ({
             }}
             className={`flex-1 flex items-center justify-center gap-2 py-1.5 px-3 rounded-md text-xs font-medium transition-all ${
               activeTab === 'github'
-                ? 'bg-charcoal-800 text-charcoal-100 shadow-sm font-semibold'
-                : 'text-charcoal-400 hover:text-charcoal-200'
+                ? 'bg-white text-slate-900 shadow-xs font-semibold'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Globe className="w-3.5 h-3.5 text-purple-400" />
+            <Globe className="w-3.5 h-3.5 text-blue-600" />
             <span>GitHub Remote</span>
-            <span className="text-[10px] px-1.5 py-0.2 rounded bg-purple-950/80 text-purple-300 font-mono">
+            <span className="text-[10px] px-1.5 py-0.2 rounded bg-blue-50 text-blue-700 border border-blue-200 font-mono">
               Remote
             </span>
           </button>
@@ -171,11 +171,11 @@ export const RepoSelectorModal: React.FC<RepoSelectorModalProps> = ({
             }}
             className={`flex-1 flex items-center justify-center gap-2 py-1.5 px-3 rounded-md text-xs font-medium transition-all ${
               activeTab === 'local'
-                ? 'bg-charcoal-800 text-charcoal-100 shadow-sm font-semibold'
-                : 'text-charcoal-400 hover:text-charcoal-200'
+                ? 'bg-white text-slate-900 shadow-xs font-semibold'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <FolderOpen className="w-3.5 h-3.5 text-brand-cyan" />
+            <FolderOpen className="w-3.5 h-3.5 text-slate-700" />
             <span>Local Directory</span>
           </button>
 
@@ -186,18 +186,18 @@ export const RepoSelectorModal: React.FC<RepoSelectorModalProps> = ({
             }}
             className={`flex-1 flex items-center justify-center gap-2 py-1.5 px-3 rounded-md text-xs font-medium transition-all ${
               activeTab === 'samples'
-                ? 'bg-charcoal-800 text-charcoal-100 shadow-sm font-semibold'
-                : 'text-charcoal-400 hover:text-charcoal-200'
+                ? 'bg-white text-slate-900 shadow-xs font-semibold'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+            <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
             <span>Sample Repos</span>
           </button>
         </div>
 
         {/* Error message */}
         {error && (
-          <div className="p-2.5 rounded-lg bg-rose-950/40 border border-rose-800/60 flex items-center gap-2 text-rose-300 text-xs">
+          <div className="p-2.5 rounded-lg bg-rose-50 border border-rose-200 flex items-center gap-2 text-rose-700 text-xs">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
@@ -208,12 +208,12 @@ export const RepoSelectorModal: React.FC<RepoSelectorModalProps> = ({
           <div className="space-y-4">
             {/* Input URL form */}
             <form onSubmit={handleGitHubSubmit} className="space-y-2">
-              <label htmlFor="github-repo-input" className="block text-xs font-medium text-charcoal-300">
+              <label htmlFor="github-repo-input" className="block text-xs font-medium text-slate-700">
                 Connect Any Public GitHub Repository
               </label>
               <div className="flex gap-2">
                 <div className="relative flex-1">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-charcoal-500 text-xs font-mono">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs font-mono">
                     github.com/
                   </div>
                   <input
@@ -225,28 +225,28 @@ export const RepoSelectorModal: React.FC<RepoSelectorModalProps> = ({
                       if (error) setError(null);
                     }}
                     placeholder="owner/repo (e.g. tiangolo/fastapi or facebook/react)"
-                    className="w-full bg-charcoal-950 border border-charcoal-700 rounded-lg pl-[94px] pr-3 py-2 text-xs font-mono text-charcoal-200 placeholder:text-charcoal-600 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
+                    className="w-full bg-white border border-slate-300 rounded-lg pl-[94px] pr-3 py-2 text-xs font-mono text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-xs"
                     autoFocus
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-4 py-2 bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 shrink-0"
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 shrink-0 shadow-xs"
                 >
                   {isSubmitting ? 'Connecting...' : 'Inspect Repo'}
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
-              <p className="text-[11px] text-charcoal-400">
-                Supports full URLs like <code className="text-charcoal-300 bg-charcoal-950 px-1 py-0.5 rounded">https://github.com/pallets/flask</code> or shorthand <code className="text-charcoal-300 bg-charcoal-950 px-1 py-0.5 rounded">owner/repo</code>.
+              <p className="text-[11px] text-slate-500">
+                Supports full URLs like <code className="text-slate-800 bg-slate-100 px-1 py-0.5 rounded border border-slate-200">https://github.com/pallets/flask</code> or shorthand <code className="text-slate-800 bg-slate-100 px-1 py-0.5 rounded border border-slate-200">owner/repo</code>.
               </p>
             </form>
 
             {/* Popular Curated GitHub Repositories */}
-            <div className="space-y-2 pt-2 border-t border-charcoal-800">
-              <span className="text-[11px] font-semibold text-charcoal-400 uppercase tracking-wider font-mono flex items-center gap-1.5">
-                <Globe className="w-3 h-3 text-purple-400" />
+            <div className="space-y-2 pt-2 border-t border-slate-200">
+              <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider font-mono flex items-center gap-1.5">
+                <Globe className="w-3 h-3 text-blue-600" />
                 Featured Open-Source Repositories (1-Click Test)
               </span>
 
@@ -260,55 +260,55 @@ export const RepoSelectorModal: React.FC<RepoSelectorModalProps> = ({
                         onSelectRepo(repo);
                         onClose();
                       }}
-                      className={`w-full text-left p-3 rounded-xl border flex items-center justify-between transition-all group ${
+                      className={`w-full text-left p-3 rounded-xl border flex items-center justify-between transition-all group shadow-2xs ${
                         isSelected
-                          ? 'bg-purple-950/30 border-purple-500/50 text-charcoal-100'
-                          : 'bg-charcoal-850/60 border-charcoal-750 hover:bg-charcoal-800 hover:border-charcoal-700 text-charcoal-200'
+                          ? 'bg-blue-50/80 border-blue-300 text-slate-900'
+                          : 'bg-white border-slate-200 hover:bg-slate-50/80 hover:border-slate-300 text-slate-800'
                       }`}
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <div
                           className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
                             isSelected
-                              ? 'bg-purple-900/40 text-purple-300 border border-purple-700/50'
-                              : 'bg-charcoal-800 text-charcoal-400'
+                              ? 'bg-blue-100 text-blue-700 border border-blue-200'
+                              : 'bg-slate-100 text-slate-600 border border-slate-200'
                           }`}
                         >
                           <Globe className="w-4 h-4" />
                         </div>
                         <div className="min-w-0">
                           <div className="flex items-center gap-2">
-                            <span className="text-xs font-semibold text-charcoal-100 group-hover:text-purple-300 transition-colors">
+                            <span className="text-xs font-semibold text-slate-900 group-hover:text-blue-700 transition-colors">
                               {repo.name}
                             </span>
-                            <span className="text-[10px] px-1.5 py-0.2 bg-charcoal-800 text-charcoal-300 rounded font-mono border border-charcoal-700">
+                            <span className="text-[10px] px-1.5 py-0.2 bg-slate-100 text-slate-600 rounded font-mono border border-slate-200">
                               {repo.projectType}
                             </span>
                             {repo.stars && (
-                              <span className="text-[10px] text-amber-400 font-mono flex items-center gap-0.5">
+                              <span className="text-[10px] text-amber-600 font-mono flex items-center gap-0.5 font-medium">
                                 <Star className="w-2.5 h-2.5 fill-current" />
                                 {(repo.stars / 1000).toFixed(1)}k
                               </span>
                             )}
                             {repo.forks && (
-                              <span className="text-[10px] text-charcoal-400 font-mono flex items-center gap-0.5 hidden sm:inline-flex">
+                              <span className="text-[10px] text-slate-400 font-mono flex items-center gap-0.5 hidden sm:inline-flex">
                                 <GitFork className="w-2.5 h-2.5" />
                                 {(repo.forks / 1000).toFixed(1)}k
                               </span>
                             )}
                           </div>
-                          <p className="text-[11px] text-charcoal-400 truncate mt-0.5">
+                          <p className="text-[11px] text-slate-500 truncate mt-0.5">
                             {repo.description || repo.path}
                           </p>
                         </div>
                       </div>
 
                       {isSelected ? (
-                        <span className="w-5 h-5 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0 ml-2">
+                        <span className="w-5 h-5 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 ml-2">
                           <Check className="w-3 h-3" />
                         </span>
                       ) : (
-                        <span className="text-xs text-charcoal-500 group-hover:text-charcoal-300 shrink-0 ml-2">
+                        <span className="text-xs text-slate-400 group-hover:text-slate-700 shrink-0 ml-2 font-medium">
                           Select
                         </span>
                       )}
@@ -325,7 +325,7 @@ export const RepoSelectorModal: React.FC<RepoSelectorModalProps> = ({
           <div className="space-y-4">
             <form onSubmit={handleCustomLocalSubmit} className="space-y-3">
               <div>
-                <label htmlFor="custom-repo-path" className="block text-xs font-medium text-charcoal-300 mb-1.5">
+                <label htmlFor="custom-repo-path" className="block text-xs font-medium text-slate-700 mb-1.5">
                   Local Repository Directory Path
                 </label>
                 <div className="flex gap-2">
@@ -338,13 +338,13 @@ export const RepoSelectorModal: React.FC<RepoSelectorModalProps> = ({
                       if (error) setError(null);
                     }}
                     placeholder="/Users/username/projects/my-app"
-                    className="flex-1 bg-charcoal-950 border border-charcoal-700 rounded-lg px-3 py-2 text-xs font-mono text-charcoal-200 placeholder:text-charcoal-500 focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan"
+                    className="flex-1 bg-white border border-slate-300 rounded-lg px-3 py-2 text-xs font-mono text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-xs"
                     autoFocus
                   />
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-4 py-2 bg-brand-cyan hover:bg-brand-cyan/90 disabled:opacity-50 text-charcoal-950 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 shrink-0"
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 shrink-0 shadow-xs"
                   >
                     {isSubmitting ? 'Connecting...' : 'Connect'}
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -353,31 +353,31 @@ export const RepoSelectorModal: React.FC<RepoSelectorModalProps> = ({
               </div>
 
               {/* Quick Suggestions for Local */}
-              <div className="p-3 rounded-lg bg-charcoal-950 border border-charcoal-800 text-xs space-y-2">
-                <span className="text-[11px] font-mono text-charcoal-400 block font-semibold">
+              <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 text-xs space-y-2">
+                <span className="text-[11px] font-mono text-slate-600 block font-semibold">
                   Quick Local Shortcuts:
                 </span>
                 <div className="flex flex-wrap gap-2">
                   <button
                     type="button"
                     onClick={() => setCustomPath('/Users/apple12390/repopilot')}
-                    className="px-2 py-1 rounded bg-charcoal-850 hover:bg-charcoal-800 border border-charcoal-700 text-charcoal-200 font-mono text-[11px]"
+                    className="px-2 py-1 rounded bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 font-mono text-[11px] shadow-2xs"
                   >
                     /Users/apple12390/repopilot (Current Workspace)
                   </button>
                   <button
                     type="button"
                     onClick={() => setCustomPath('.')}
-                    className="px-2 py-1 rounded bg-charcoal-850 hover:bg-charcoal-800 border border-charcoal-700 text-charcoal-200 font-mono text-[11px]"
+                    className="px-2 py-1 rounded bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 font-mono text-[11px] shadow-2xs"
                   >
                     . (Current Directory)
                   </button>
                 </div>
               </div>
 
-              <div className="p-2.5 rounded-lg bg-charcoal-850/50 border border-charcoal-800 text-[11px] text-charcoal-400 space-y-1">
-                <p className="flex items-center gap-1.5 text-charcoal-300">
-                  <Terminal className="w-3 h-3 text-brand-cyan" />
+              <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-[11px] text-slate-600 space-y-1">
+                <p className="flex items-center gap-1.5 font-medium text-slate-800">
+                  <Terminal className="w-3 h-3 text-blue-600" />
                   Local CLI Security:
                 </p>
                 <p>
@@ -391,8 +391,8 @@ export const RepoSelectorModal: React.FC<RepoSelectorModalProps> = ({
         {/* TAB 3: SAMPLE INTERACTIVE REPOS */}
         {activeTab === 'samples' && (
           <div className="space-y-3">
-            <p className="text-xs text-charcoal-400">
-              Pre-configured mock repositories with full Doctor diagnostics, directory explorer trees, and pre-PR branch comparisons.
+            <p className="text-xs text-slate-500">
+              Pre-configured repositories with full Doctor diagnostics, directory explorer trees, and pre-PR branch comparisons.
             </p>
 
             <div className="grid gap-2">
@@ -405,38 +405,38 @@ export const RepoSelectorModal: React.FC<RepoSelectorModalProps> = ({
                       onSelectRepo(repo);
                       onClose();
                     }}
-                    className={`w-full text-left p-3 rounded-xl border flex items-center justify-between transition-all ${
+                    className={`w-full text-left p-3 rounded-xl border flex items-center justify-between transition-all shadow-2xs ${
                       isSelected
-                        ? 'bg-brand-cyan/10 border-brand-cyan/40 text-charcoal-100'
-                        : 'bg-charcoal-850/70 border-charcoal-750 hover:bg-charcoal-800 hover:border-charcoal-700 text-charcoal-200'
+                        ? 'bg-blue-50/80 border-blue-300 text-slate-900'
+                        : 'bg-white border-slate-200 hover:bg-slate-50/80 hover:border-slate-300 text-slate-800'
                     }`}
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       <div
                         className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
                           isSelected
-                            ? 'bg-brand-cyan/20 text-brand-cyan'
-                            : 'bg-charcoal-800 text-charcoal-400'
+                            ? 'bg-blue-100 text-blue-700 border border-blue-200'
+                            : 'bg-slate-100 text-slate-600 border border-slate-200'
                         }`}
                       >
                         <FolderGit2 className="w-4 h-4" />
                       </div>
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="text-xs font-semibold text-charcoal-100 truncate">{repo.name}</span>
-                          <span className="text-[10px] px-1.5 py-0.2 bg-charcoal-750 text-charcoal-300 rounded font-mono">
+                          <span className="text-xs font-semibold text-slate-900 truncate">{repo.name}</span>
+                          <span className="text-[10px] px-1.5 py-0.2 bg-slate-100 text-slate-600 rounded font-mono border border-slate-200">
                             {repo.projectType}
                           </span>
                         </div>
-                        <p className="text-[11px] text-charcoal-400 truncate font-mono mt-0.5">{repo.path}</p>
+                        <p className="text-[11px] text-slate-500 truncate font-mono mt-0.5">{repo.path}</p>
                       </div>
                     </div>
                     {isSelected ? (
-                      <span className="w-5 h-5 rounded-full bg-brand-cyan/20 text-brand-cyan flex items-center justify-center shrink-0">
+                      <span className="w-5 h-5 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
                         <Check className="w-3 h-3" />
                       </span>
                     ) : (
-                      <span className="text-xs text-charcoal-500">Select</span>
+                      <span className="text-xs text-slate-400 font-medium">Select</span>
                     )}
                   </button>
                 );
