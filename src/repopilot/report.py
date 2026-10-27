@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import json
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
-from rich.box import ROUNDED, SIMPLE
+from rich.box import ROUNDED
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
@@ -13,10 +13,12 @@ from rich.text import Text
 from rich.tree import Tree
 
 from repopilot.models import (
+    ChangeType,
     CheckStatus,
     ConfidenceLevel,
     DiagnosticReport,
     ExploreReport,
+    PRCheckReport,
     ProjectCategory,
     TreeNode,
 )
@@ -337,6 +339,197 @@ def render_explore_report(report: ExploreReport, console: Optional[Console] = No
     )
 
 
-def render_json(report: Union[DiagnosticReport, ExploreReport]) -> str:
-    """Serializes a diagnostic or exploration report to a deterministic, formatted JSON string."""
+def render_pr_check_report(report: PRCheckReport, console: Optional[Console] = None) -> None:
+    """Renders a formatted pre-PR diagnostic report to the Rich console."""
+    if console is None:
+        console = Console()
+
+    git_info = report.git_info
+
+    # 1. Error for non-git repositories
+    if not git_info.is_git_repo:
+        console.print(
+            Panel(
+                f"[bold red]Git Error:[/bold red] {git_info.error_message}",
+                title="[bold red]RepoPilot PR Compass[/bold red]",
+                border_style="red",
+                box=ROUNDED,
+            )
+        )
+        return
+
+    # Notice for repositories without commits
+    if not git_info.has_commits:
+        console.print(
+            Panel(
+                f"[bold yellow]Git Notice:[/bold yellow] {git_info.error_message}",
+                title="[bold yellow]RepoPilot PR Compass[/bold yellow]",
+                border_style="yellow",
+                box=ROUNDED,
+            )
+        )
+        return
+
+    # Header Panel
+    status_badge = (
+        "[bold yellow]⚠ Uncommitted Changes in Working Tree[/bold yellow]"
+        if report.uncommitted.has_uncommitted
+        else "[bold green]✔ Clean Working Tree[/bold green]"
+    )
+    comp_range = git_info.comparison_range or "[yellow]N/A (base branch not resolved)[/yellow]"
+
+    header_body = (
+        f"[bold]Current Branch:[/bold] [cyan]{git_info.current_branch}[/cyan]\n"
+        f"[bold]Base Branch:[/bold] [cyan]{git_info.base_branch}[/cyan] [dim]({git_info.base_ref or 'unresolved'})[/dim]\n"
+        f"[bold]Comparison Range:[/bold] [white]{comp_range}[/white]\n"
+        f"[bold]Working Tree Status:[/bold] {status_badge}\n"
+        f"[bold]Committed Changes:[/bold] {report.summary.get('total', 0)} files changed "
+        f"([green]+{report.summary.get('added', 0)} added[/green], "
+        f"[yellow]~{report.summary.get('modified', 0)} modified[/yellow], "
+        f"[red]-{report.summary.get('deleted', 0)} deleted[/red], "
+        f"[cyan]{report.summary.get('renamed', 0)} renamed[/cyan])"
+    )
+
+    console.print(
+        Panel(
+            header_body,
+            title="[bold blue]RepoPilot PR Compass — Pre-PR Diagnostic Report[/bold blue]",
+            border_style="blue",
+            box=ROUNDED,
+        )
+    )
+
+    # Base branch missing warning
+    if git_info.base_ref is None and git_info.error_message:
+        console.print(
+            Panel(
+                f"[bold yellow]Warning:[/bold yellow] {git_info.error_message}",
+                border_style="yellow",
+                box=ROUNDED,
+            )
+        )
+
+    # 2. Committed Branch Changes Table
+    if report.branch_changes:
+        changes_table = Table(
+            title=f"Committed Branch Changes (vs '{git_info.base_branch}')",
+            box=ROUNDED,
+            header_style="bold magenta",
+            title_style="bold",
+            show_lines=False,
+        )
+        changes_table.add_column("Type", width=12)
+        changes_table.add_column("File Path", style="bold", width=34)
+        changes_table.add_column("Affected Area", style="cyan", width=24)
+        changes_table.add_column("Details", style="dim")
+
+        for change in report.branch_changes:
+            if change.change_type == ChangeType.ADDED:
+                badge = "[bold green]Added[/bold green]"
+                det = "New file in branch"
+            elif change.change_type == ChangeType.MODIFIED:
+                badge = "[bold yellow]Modified[/bold yellow]"
+                det = "Existing file modified"
+            elif change.change_type == ChangeType.DELETED:
+                badge = "[bold red]Deleted[/bold red]"
+                det = "File removed"
+            elif change.change_type == ChangeType.RENAMED:
+                badge = "[bold cyan]Renamed[/bold cyan]"
+                det = f"From: {change.old_path}"
+            else:
+                badge = "[white]Copied[/white]"
+                det = f"From: {change.old_path}"
+
+            changes_table.add_row(badge, change.path, change.affected_area, det)
+
+        console.print(changes_table)
+    elif git_info.base_ref is not None:
+        console.print(
+            Panel(
+                "[dim]No committed differences between the current branch and the selected base branch.[/dim]",
+                title="[bold]Committed Branch Changes[/bold]",
+                border_style="dim",
+                box=ROUNDED,
+            )
+        )
+
+    # 3. Uncommitted Working Tree Notice
+    if report.uncommitted.has_uncommitted:
+        uncommitted_table = Table(
+            title="Uncommitted Working Tree Changes",
+            box=ROUNDED,
+            header_style="bold magenta",
+            title_style="bold",
+            show_lines=False,
+        )
+        uncommitted_table.add_column("Category", style="cyan", width=14)
+        uncommitted_table.add_column("Count", width=8)
+        uncommitted_table.add_column("Files")
+
+        unc = report.uncommitted
+        if unc.staged_files:
+            uncommitted_table.add_row("[green]Staged[/green]", str(unc.staged_count), ", ".join(unc.staged_files[:5]) + (f" (+{len(unc.staged_files)-5} more)" if len(unc.staged_files) > 5 else ""))
+        if unc.unstaged_files:
+            uncommitted_table.add_row("[yellow]Unstaged[/yellow]", str(unc.unstaged_count), ", ".join(unc.unstaged_files[:5]) + (f" (+{len(unc.unstaged_files)-5} more)" if len(unc.unstaged_files) > 5 else ""))
+        if unc.untracked_files:
+            uncommitted_table.add_row("[dim]Untracked[/dim]", str(unc.untracked_count), ", ".join(unc.untracked_files[:5]) + (f" (+{len(unc.untracked_files)-5} more)" if len(unc.untracked_files) > 5 else ""))
+
+        console.print(uncommitted_table)
+        console.print("[yellow]Note: Uncommitted changes are present in your workspace but are NOT part of the committed PR comparison.[/yellow]\n")
+
+    # 4. Test Coverage & Gap Analysis Table
+    if report.test_analysis.mappings:
+        test_table = Table(
+            title="Test Coverage & Potential Gap Analysis",
+            box=ROUNDED,
+            header_style="bold magenta",
+            title_style="bold",
+            show_lines=False,
+        )
+        test_table.add_column("Changed File", style="bold", width=32)
+        test_table.add_column("Test Status", width=18)
+        test_table.add_column("Related Test Files", style="cyan", width=28)
+        test_table.add_column("Notes", style="dim")
+
+        for m in report.test_analysis.mappings:
+            if m.has_potential_gap:
+                status_str = "[bold yellow]⚠ Potential Gap[/bold yellow]"
+            elif m.related_tests and m.related_tests != [m.changed_file]:
+                status_str = "[bold green]✔ Test Found[/bold green]"
+            elif m.related_tests == [m.changed_file]:
+                status_str = "[green]Test File[/green]"
+            else:
+                status_str = "[dim]Non-code[/dim]"
+
+            related_display = ", ".join(m.related_tests) if m.related_tests else "[dim]None detected[/dim]"
+            test_table.add_row(m.changed_file, status_str, related_display, m.note)
+
+        console.print(test_table)
+
+    # 5. Suggested Test Commands Panel
+    ta = report.test_analysis
+    test_body = (
+        f"[bold]Detected Test Framework:[/bold] [cyan]{ta.framework}[/cyan]\n"
+        f"[bold]Suggested Test Command:[/bold] [bold green]{ta.suggested_command or 'None'}[/bold green]\n"
+        f"[bold]Tests Executed by RepoPilot:[/bold] [white]False[/white] "
+        f"[dim](RepoPilot is read-only and does not run test suites automatically)[/dim]"
+    )
+    console.print(
+        Panel(
+            test_body,
+            title="[bold green]Test Verification Recommendations[/bold green]",
+            border_style="green",
+            box=ROUNDED,
+        )
+    )
+
+    # Footer Safety Note
+    console.print(
+        "[dim]Safety note: RepoPilot operates in read-only mode. No Git commits, branches, or worktree files were altered.\n"
+        "Missing tests are flagged as potential gaps for human review, not confirmed defects.[/dim]\n"
+    )
+
+
+def render_json(report: Any) -> str:
+    """Serializes a report (DiagnosticReport, ExploreReport, or PRCheckReport) to formatted JSON."""
     return json.dumps(report.to_dict(), indent=2, sort_keys=True)

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Optional
 
@@ -241,4 +241,149 @@ class ExploreReport:
             "tree": self.tree.to_dict(),
             "important_files": [f.to_dict() for f in self.important_files],
             "starting_points": [p.to_dict() for p in self.starting_points],
+        }
+
+
+# --- Milestone 3: PR Compass Models ---
+
+
+class ChangeType(str, Enum):
+    """Classification of Git file changes."""
+
+    ADDED = "added"
+    MODIFIED = "modified"
+    DELETED = "deleted"
+    RENAMED = "renamed"
+    COPIED = "copied"
+
+
+@dataclass
+class FileChange:
+    """Represents a single changed file between Git refs or in working tree."""
+
+    path: str
+    change_type: ChangeType
+    old_path: Optional[str] = None
+    is_committed: bool = True
+    status_label: str = "committed"
+    affected_area: str = "General"
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "path": self.path,
+            "change_type": self.change_type.value,
+            "old_path": self.old_path,
+            "is_committed": self.is_committed,
+            "status_label": self.status_label,
+            "affected_area": self.affected_area,
+        }
+
+
+@dataclass
+class UncommittedStatus:
+    """Detailed summary of uncommitted changes in the Git working tree."""
+
+    has_uncommitted: bool = False
+    staged_count: int = 0
+    unstaged_count: int = 0
+    untracked_count: int = 0
+    staged_files: list[str] = field(default_factory=list)
+    unstaged_files: list[str] = field(default_factory=list)
+    untracked_files: list[str] = field(default_factory=list)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "has_uncommitted": self.has_uncommitted,
+            "staged_count": self.staged_count,
+            "unstaged_count": self.unstaged_count,
+            "untracked_count": self.untracked_count,
+            "staged_files": self.staged_files,
+            "unstaged_files": self.unstaged_files,
+            "untracked_files": self.untracked_files,
+        }
+
+
+@dataclass
+class GitBranchInfo:
+    """Git branch identification and comparison metadata."""
+
+    is_git_repo: bool = True
+    current_branch: Optional[str] = None
+    base_branch: str = "main"
+    base_ref: Optional[str] = None
+    comparison_range: Optional[str] = None
+    has_commits: bool = True
+    error_message: Optional[str] = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "is_git_repo": self.is_git_repo,
+            "current_branch": self.current_branch,
+            "base_branch": self.base_branch,
+            "base_ref": self.base_ref,
+            "comparison_range": self.comparison_range,
+            "has_commits": self.has_commits,
+            "error_message": self.error_message,
+        }
+
+
+@dataclass
+class FileTestMapping:
+    """Mapping of a changed file to candidate test files and potential gap notices."""
+
+    changed_file: str
+    related_tests: list[str] = field(default_factory=list)
+    has_potential_gap: bool = False
+    note: str = ""
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "changed_file": self.changed_file,
+            "related_tests": self.related_tests,
+            "has_potential_gap": self.has_potential_gap,
+            "note": self.note,
+        }
+
+
+@dataclass
+class TestAnalysis:
+    """Analysis of testing coverage, inferred test framework, and suggested commands."""
+
+    framework: str = "None detected"
+    suggested_command: Optional[str] = None
+    mappings: list[FileTestMapping] = field(default_factory=list)
+    tests_executed: bool = False
+    potential_gaps_count: int = 0
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "framework": self.framework,
+            "suggested_command": self.suggested_command,
+            "mappings": [m.to_dict() for m in self.mappings],
+            "tests_executed": self.tests_executed,
+            "potential_gaps_count": self.potential_gaps_count,
+        }
+
+
+@dataclass
+class PRCheckReport:
+    """Comprehensive pre-PR diagnostic report produced by `pr-check`."""
+
+    git_info: GitBranchInfo
+    uncommitted: UncommittedStatus
+    branch_changes: list[FileChange] = field(default_factory=list)
+    summary: dict[str, int] = field(default_factory=dict)
+    affected_areas: list[str] = field(default_factory=list)
+    test_analysis: TestAnalysis = field(default_factory=TestAnalysis)
+    warnings: list[str] = field(default_factory=list)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "git_info": self.git_info.to_dict(),
+            "uncommitted": self.uncommitted.to_dict(),
+            "branch_changes": [c.to_dict() for c in self.branch_changes],
+            "summary": self.summary,
+            "affected_areas": self.affected_areas,
+            "test_analysis": self.test_analysis.to_dict(),
+            "warnings": self.warnings,
         }

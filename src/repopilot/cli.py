@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Optional
 
@@ -11,7 +12,13 @@ from rich.console import Console
 from repopilot import __version__
 from repopilot.diagnostics import run_diagnostics
 from repopilot.explorer import explore_repository
-from repopilot.report import render_explore_report, render_json, render_report
+from repopilot.pr_check import analyze_pr
+from repopilot.report import (
+    render_explore_report,
+    render_json,
+    render_pr_check_report,
+    render_report,
+)
 from repopilot.scanner import scan_repository
 
 app = typer.Typer(
@@ -92,7 +99,7 @@ def doctor(
         raise
     except Exception as exc:
         if json_output:
-            typer.echo(f'{{"error": "{str(exc)}"}}')
+            typer.echo(json.dumps({"error": str(exc)}))
         else:
             console.print(f"[bold red]Unexpected Error:[/bold red] {exc}")
         raise typer.Exit(code=1)
@@ -147,7 +154,52 @@ def explore(
         raise
     except Exception as exc:
         if json_output:
-            typer.echo(f'{{"error": "{str(exc)}"}}')
+            typer.echo(json.dumps({"error": str(exc)}))
+        else:
+            console.print(f"[bold red]Unexpected Error:[/bold red] {exc}")
+        raise typer.Exit(code=1)
+
+
+@app.command(
+    name="pr-check",
+    help="Analyze Git changes relative to a base branch, detect affected areas, discover tests, and highlight gaps before opening a PR.",
+)
+def pr_check(
+    path: Path = typer.Argument(
+        default=Path("."),
+        help="Path to the repository to inspect (defaults to current directory).",
+        show_default=".",
+    ),
+    base: str = typer.Option(
+        "main",
+        "--base",
+        "-b",
+        help="Base branch to compare against (e.g. 'main' or 'master').",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output PR Compass report in structured JSON format.",
+    ),
+) -> None:
+    """Safely audits local Git branch changes and test coverage gaps before submitting a PR."""
+    try:
+        report = analyze_pr(path, base_branch=base)
+
+        if json_output:
+            typer.echo(render_json(report))
+        else:
+            render_pr_check_report(report, console=console)
+
+        # Exit code 1 if Git repository not found, has no commits, or base branch missing
+        if not report.git_info.is_git_repo or not report.git_info.has_commits or report.git_info.base_ref is None:
+            raise typer.Exit(code=1)
+
+    except typer.Exit:
+        raise
+    except Exception as exc:
+        if json_output:
+            typer.echo(json.dumps({"error": str(exc)}))
         else:
             console.print(f"[bold red]Unexpected Error:[/bold red] {exc}")
         raise typer.Exit(code=1)

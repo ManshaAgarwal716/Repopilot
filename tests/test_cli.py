@@ -20,6 +20,7 @@ def test_cli_help():
     assert "Usage: repopilot" in result.stdout
     assert "doctor" in result.stdout
     assert "explore" in result.stdout
+    assert "pr-check" in result.stdout
     assert "--help" in result.stdout
 
 

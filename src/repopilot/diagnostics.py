@@ -166,7 +166,7 @@ def generate_next_steps(scan: RepositoryScan, tools: list[ToolStatus]) -> list[s
         return steps
 
     if not scan.is_dir:
-        steps.append(f"Specify a directory path instead of a file for scanning.")
+        steps.append("Specify a directory path instead of a file for scanning.")
         return steps
 
     if not scan.is_accessible:

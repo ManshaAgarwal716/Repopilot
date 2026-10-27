@@ -7,12 +7,8 @@ from pathlib import Path
 from unittest.mock import patch
 
 from repopilot.explorer import (
-    analyze_structure,
     build_file_tree,
-    detect_frameworks,
     explore_repository,
-    find_starting_points,
-    identify_important_files,
 )
 from repopilot.models import ConfidenceLevel, ProjectCategory
 

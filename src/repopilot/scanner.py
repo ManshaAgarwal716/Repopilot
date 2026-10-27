@@ -73,7 +73,7 @@ NODE_SECONDARY_CHECKS: Final[list[tuple[str, str, bool]]] = [
 
 def _safe_has_python_sources(root: Path) -> bool:
     """Safely check if top-level or src/ directory contains Python source files.
-    
+
     Does not recurse into ignored directories.
     """
     try:

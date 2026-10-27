@@ -171,7 +171,7 @@ NODE_ENTRY_CANDIDATES: Final[list[str]] = [
 
 def detect_frameworks(root: Path) -> list[str]:
     """Safely extracts recognized frameworks from dependency configuration files.
-    
+
     Reads only declared package manifests with size limits and never executes code.
     """
     detected: set[str] = set()

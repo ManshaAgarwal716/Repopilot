@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import subprocess
-from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 from repopilot.diagnostics import (
@@ -53,7 +52,7 @@ def test_run_tool_command_failure_exit_code():
     mock_res.stderr = "Fatal error"
 
     with patch("shutil.which", return_value="/bin/tool"), patch("subprocess.run", return_value=mock_res):
-        installed, version, err = _run_tool_command(["tool"])
+        installed, _version, err = _run_tool_command(["tool"])
         assert installed is False
         assert "Fatal error" in (err or "")
 
@@ -79,6 +78,16 @@ def test_check_git_version_parsing():
         assert status.installed is True
         assert status.version == "2.44.0"
         assert status.name == "Git"
+
+
+def test_check_python_version_parsing():
+    """Checks Python version detection and parsing."""
+    with patch("repopilot.diagnostics._run_tool_command", return_value=(True, "Python 3.12.2", None)):
+        status = check_python(required=True)
+        assert status.installed is True
+        assert status.version == "3.12.2"
+        assert status.name == "Python"
+        assert status.required is True
 
 
 def test_check_node_and_npm():
