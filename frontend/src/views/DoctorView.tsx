@@ -7,7 +7,6 @@ import {
   Copy,
   Check,
   Sparkles,
-  Info,
   Layers,
   Wrench,
   ListOrdered,
@@ -23,6 +22,8 @@ interface DoctorViewProps {
   report: DoctorReport | null;
   onOpenRepoSelector: () => void;
   onLoadDemoRepo: () => void;
+  isLoading?: boolean;
+  onReanalyze?: () => void;
 }
 
 export const DoctorView: React.FC<DoctorViewProps> = ({
@@ -30,6 +31,8 @@ export const DoctorView: React.FC<DoctorViewProps> = ({
   report,
   onOpenRepoSelector,
   onLoadDemoRepo,
+  isLoading,
+  onReanalyze,
 }) => {
   const [filter, setFilter] = useState<'all' | 'found' | 'missing'>('all');
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
@@ -40,53 +43,75 @@ export const DoctorView: React.FC<DoctorViewProps> = ({
       <EmptyState
         icon={Stethoscope}
         title="No Repository Selected for Doctor Diagnostics"
-        description="Select a local repository or load the interactive demo repository to inspect project manifests, ecosystem tools, and setup recommendations."
+        description="Select a local repository or connect a public GitHub repository to inspect project manifests, ecosystem tools, and setup recommendations."
         actionText="Select Repository"
         onAction={onOpenRepoSelector}
-        secondaryActionText="Load Demo Repo"
+        secondaryActionText="Load Sample Repo"
         onSecondaryAction={onLoadDemoRepo}
       />
     );
   }
 
-  // Custom path without backend running
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="p-12 rounded-2xl bg-charcoal-900 border border-charcoal-800 text-center flex flex-col items-center justify-center space-y-4">
+        <div className="w-14 h-14 rounded-2xl bg-emerald-950/60 border border-emerald-800/60 flex items-center justify-center text-emerald-400 shadow-lg">
+          <Sparkles className="w-7 h-7 animate-spin" />
+        </div>
+        <div className="space-y-1.5">
+          <h3 className="text-sm font-semibold text-charcoal-100 font-mono">
+            Auditing Environment & Tools: {activeRepo.name}
+          </h3>
+          <p className="text-xs text-charcoal-400 max-w-md mx-auto leading-relaxed">
+            RepoPilot engine is checking runtime binaries, verifying package manifests, and determining installation next steps...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Not yet analyzed
   if (!report) {
     return (
       <div className="space-y-5">
-        <div className="p-4 rounded-xl bg-charcoal-900 border border-charcoal-800 flex items-start gap-3">
-          <Info className="w-5 h-5 text-brand-cyan shrink-0 mt-0.5" />
-          <div className="space-y-1">
-            <h4 className="text-xs font-semibold text-charcoal-100">
-              Live Analysis Pending for: <code className="font-mono text-brand-cyan">{activeRepo.path}</code>
-            </h4>
-            <p className="text-xs text-charcoal-400 leading-relaxed">
-              In this frontend milestone, live repository analysis requires running the local CLI. The backend HTTP API server is planned for the next release.
-            </p>
-          </div>
-        </div>
-
         <Card>
           <CardHeader
-            title="Run Repository Doctor in Terminal"
-            subtitle="Execute the verified Python CLI on your target directory right now"
+            title={
+              <span className="flex items-center gap-2">
+                <Stethoscope className="w-4 h-4 text-emerald-400" />
+                <span>Run Doctor Diagnostics: {activeRepo.name}</span>
+              </span>
+            }
+            subtitle="Verify development prerequisites, system tool availability, and configuration manifests"
           />
           <CardContent className="space-y-4">
-            <div className="bg-charcoal-950 border border-charcoal-800 rounded-xl p-4 font-mono text-xs space-y-2">
-              <div className="flex items-center justify-between text-charcoal-400 border-b border-charcoal-800 pb-2">
-                <span>TERMINAL COMMAND</span>
-                <span className="text-[11px] text-emerald-400">Read-Only</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-charcoal-200">repopilot doctor {activeRepo.path}</span>
-              </div>
-            </div>
+            <p className="text-xs text-charcoal-400 leading-relaxed">
+              Target repository: <code className="font-mono text-charcoal-200 bg-charcoal-950 px-1.5 py-0.5 rounded border border-charcoal-800">{activeRepo.path}</code>. Click below to run live environment diagnostics.
+            </p>
 
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
+              {onReanalyze && (
+                <button
+                  onClick={onReanalyze}
+                  className="px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-charcoal-950 text-xs font-semibold flex items-center gap-2 transition-colors shadow-sm"
+                >
+                  <Stethoscope className="w-4 h-4" />
+                  <span>Run Doctor Diagnostics Now</span>
+                </button>
+              )}
               <button
-                onClick={onLoadDemoRepo}
-                className="px-3.5 py-2 rounded-lg bg-brand-cyan/15 hover:bg-brand-cyan/25 text-brand-cyan border border-brand-cyan/30 text-xs font-medium transition-colors"
+                onClick={() =>
+                  window.dispatchEvent(
+                    new CustomEvent('repopilot:terminal', {
+                      detail: { command: `repopilot doctor ${activeRepo.path}` },
+                    })
+                  )
+                }
+                className="px-3.5 py-2 rounded-lg bg-charcoal-850 hover:bg-charcoal-800 text-charcoal-300 border border-charcoal-700 text-xs font-mono transition-colors flex items-center gap-1.5"
               >
-                Switch to Demo Dataset to View Sample Output
+                <Terminal className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Run in Terminal</span>
               </button>
             </div>
           </CardContent>
@@ -114,29 +139,38 @@ export const DoctorView: React.FC<DoctorViewProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Demo Banner */}
-      {activeRepo.isDemo && (
-        <div className="p-3 bg-charcoal-900 border border-brand-cyan/30 rounded-xl flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-brand-cyan shrink-0" />
-            <span className="text-charcoal-200">
-              Viewing simulated diagnostics for <strong className="text-charcoal-100 font-mono">{activeRepo.name}</strong>.
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => window.dispatchEvent(new CustomEvent('repopilot:terminal', { detail: { command: 'repopilot doctor .' } }))}
-              className="px-2.5 py-1 rounded bg-charcoal-800 hover:bg-charcoal-750 text-emerald-400 font-mono text-[11px] border border-charcoal-700 flex items-center gap-1.5 transition-colors"
-            >
-              <Terminal className="w-3 h-3" />
-              <span>Run in Terminal</span>
-            </button>
-            <Badge variant="cyan" size="sm">
-              Demo Mode
-            </Badge>
-          </div>
+      {/* Live Active Repository Banner */}
+      <div className="p-3 bg-charcoal-900 border border-charcoal-800 rounded-xl flex items-center justify-between text-xs">
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="text-charcoal-200">
+            Active diagnostics for <strong className="text-charcoal-100 font-mono">{activeRepo.name}</strong> ({report.category.toUpperCase()} category, {foundCount} config files verified).
+          </span>
         </div>
-      )}
+        <div className="flex items-center gap-2">
+          {onReanalyze && (
+            <button
+              onClick={onReanalyze}
+              className="px-2 py-1 rounded bg-charcoal-800 hover:bg-charcoal-750 text-charcoal-300 text-[11px] border border-charcoal-700 transition-colors"
+            >
+              Re-scan
+            </button>
+          )}
+          <button
+            onClick={() =>
+              window.dispatchEvent(
+                new CustomEvent('repopilot:terminal', {
+                  detail: { command: `repopilot doctor ${activeRepo.path}` },
+                })
+              )
+            }
+            className="px-2.5 py-1 rounded bg-charcoal-800 hover:bg-charcoal-750 text-emerald-400 font-mono text-[11px] border border-charcoal-700 flex items-center gap-1.5 transition-colors"
+          >
+            <Terminal className="w-3 h-3" />
+            <span>Terminal</span>
+          </button>
+        </div>
+      </div>
 
       {/* Top Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">

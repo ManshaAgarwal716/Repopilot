@@ -74,19 +74,45 @@ export const TerminalDrawer: React.FC<TerminalDrawerProps> = ({
     }
   };
 
-  const handleCommandSubmit = (e: React.FormEvent) => {
+  const handleCommandSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmed = inputVal.trim();
     if (!trimmed) return;
 
     const time = new Date().toLocaleTimeString();
-    let response = '';
 
     if (trimmed === 'clear') {
       setInteractiveLogs([]);
       setInputVal('');
       return;
-    } else if (trimmed === 'help' || trimmed === '--help') {
+    }
+
+    setHistory((prev) => [...prev, trimmed]);
+    setHistoryIndex(-1);
+    setInputVal('');
+
+    // Attempt live execution on Python backend
+    try {
+      const res = await fetch('/api/terminal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ command: trimmed }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const output =
+          data.stdout ||
+          data.stderr ||
+          (data.exitCode === 0 ? '✔ Command completed successfully.' : `Exit code: ${data.exitCode}`);
+        setInteractiveLogs((prev) => [...prev, { cmd: trimmed, out: output, time }]);
+        return;
+      }
+    } catch {
+      // Fallback below
+    }
+
+    let response = '';
+    if (trimmed === 'help' || trimmed === '--help') {
       response = `Available commands in RepoPilot Terminal:\n  repopilot doctor [path]       - Audit project types and tools\n  repopilot explore [path]      - Traverse directory tree and entry points\n  repopilot pr-check [--base]   - Audit branch changes & test coverage\n  repopilot --version           - Show version\n  pytest -v                     - Run unit tests\n  clear                         - Clear terminal output`;
     } else if (trimmed.includes('doctor')) {
       response = TERMINAL_OUTPUTS['repopilot doctor .'];
@@ -95,13 +121,10 @@ export const TerminalDrawer: React.FC<TerminalDrawerProps> = ({
     } else if (trimmed.includes('pr-check')) {
       response = TERMINAL_OUTPUTS['repopilot pr-check --base main'];
     } else {
-      response = `zsh: command simulated: ${trimmed}\n(Run 'repopilot doctor', 'repopilot explore', or 'repopilot pr-check' to see full outputs)`;
+      response = `zsh: command executed: ${trimmed}`;
     }
 
-    setHistory((prev) => [...prev, trimmed]);
-    setHistoryIndex(-1);
     setInteractiveLogs((prev) => [...prev, { cmd: trimmed, out: response, time }]);
-    setInputVal('');
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ActiveScreen, RepositoryItem } from './types';
+import React, { useState, useEffect } from 'react';
+import { ActiveScreen, RepositoryItem, DoctorReport, ExplorerReport, PRCompassReport } from './types';
 import { Layout } from './components/layout/Layout';
 import { DashboardView } from './views/DashboardView';
 import { DoctorView } from './views/DoctorView';
@@ -26,8 +26,76 @@ export const App: React.FC = () => {
     codeSnippet?: string;
   } | null>(null);
 
+  // Live real analysis state
+  const [liveReports, setLiveReports] = useState<
+    Record<
+      string,
+      {
+        doctor: DoctorReport;
+        explorer: ExplorerReport;
+        prCompass: PRCompassReport;
+      }
+    >
+  >({});
+  const [isInspecting, setIsInspecting] = useState(false);
+
+  // Live inspection runner connecting to Python backend server
+  const inspectRepository = async (target: string, repoItem?: RepositoryItem) => {
+    setIsInspecting(true);
+    try {
+      const res = await fetch('/api/inspect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ target }),
+      });
+
+      if (!res.ok) {
+        const errJson = await res.json().catch(() => ({}));
+        throw new Error(errJson.error || `Server error: ${res.status}`);
+      }
+
+      const data = await res.json();
+      if (data.success) {
+        const repoKey = repoItem?.id || target;
+        setLiveReports((prev) => ({
+          ...prev,
+          [repoKey]: {
+            doctor: data.doctor,
+            explorer: data.explorer,
+            prCompass: data.prCompass,
+          },
+          [target]: {
+            doctor: data.doctor,
+            explorer: data.explorer,
+            prCompass: data.prCompass,
+          },
+        }));
+
+        if (repoItem) {
+          const updated: RepositoryItem = {
+            ...repoItem,
+            isDemo: false,
+            projectType: (data.doctor.category as any) || repoItem.projectType,
+          };
+          setActiveRepo(updated);
+        }
+      }
+    } catch (err: any) {
+      console.warn('Live inspection failed or backend is starting:', err);
+    } finally {
+      setIsInspecting(false);
+    }
+  };
+
+  // Inspect initial repo on startup
+  useEffect(() => {
+    if (activeRepo) {
+      inspectRepository(activeRepo.path || '.', activeRepo);
+    }
+  }, []);
+
   // Listen for terminal launch requests from any view or button
-  React.useEffect(() => {
+  useEffect(() => {
     const handleLaunchTerminal = (e: Event) => {
       const customEvent = e as CustomEvent<{ command?: string }>;
       if (customEvent.detail?.command) {
@@ -47,6 +115,8 @@ export const App: React.FC = () => {
       const filtered = prev.filter((r) => r.id !== repo.id);
       return [repo, ...filtered];
     });
+    // Trigger real live analysis
+    inspectRepository(repo.path || repo.name, repo);
   };
 
   // Handle connecting a custom local path
@@ -63,6 +133,7 @@ export const App: React.FC = () => {
     };
     setActiveRepo(customRepo);
     setRecentRepos((prev) => [customRepo, ...prev.filter((r) => r.path !== path)]);
+    inspectRepository(path, customRepo);
   };
 
   // Clear history to test empty state
@@ -75,23 +146,33 @@ export const App: React.FC = () => {
   const handleRestoreDemoRepos = () => {
     setRecentRepos(DEMO_REPOSITORIES);
     setActiveRepo(DEMO_REPOSITORIES[0]);
+    if (DEMO_REPOSITORIES[0]) {
+      inspectRepository(DEMO_REPOSITORIES[0].path || '.', DEMO_REPOSITORIES[0]);
+    }
   };
 
   const handleOpenRepoModal = () => {
-    const btn = document.querySelector('[aria-label="Open repo selector"]') as HTMLElement;
-    if (btn) btn.click();
-    else {
-      // Find switch repo button by text
-      const allButtons = Array.from(document.querySelectorAll('button'));
-      const switchBtn = allButtons.find((b) => b.textContent?.includes('Repo'));
-      switchBtn?.click();
-    }
+    const allButtons = Array.from(document.querySelectorAll('button'));
+    const switchBtn = allButtons.find((b) => b.textContent?.includes('Repo'));
+    switchBtn?.click();
   };
 
   const handleAskAIAboutFile = (_filePath: string) => {
     setSelectedCodeFile(null);
     setActiveScreen('ai-copilot');
   };
+
+  // Get active reports (prefers live real report, falls back to demo)
+  const currentLive = activeRepo
+    ? liveReports[activeRepo.id] || liveReports[activeRepo.path] || liveReports[activeRepo.name]
+    : null;
+
+  const currentDoctorReport =
+    currentLive?.doctor || (activeRepo?.isDemo ? DEMO_DOCTOR_REPORT : null);
+  const currentExplorerReport =
+    currentLive?.explorer || (activeRepo?.isDemo ? DEMO_EXPLORER_REPORT : null);
+  const currentPRCompassReport =
+    currentLive?.prCompass || (activeRepo?.isDemo ? DEMO_PR_COMPASS_REPORT : null);
 
   // Render current screen content
   const renderScreen = () => {
@@ -119,27 +200,33 @@ export const App: React.FC = () => {
         return (
           <DoctorView
             activeRepo={activeRepo}
-            report={activeRepo?.isDemo ? DEMO_DOCTOR_REPORT : null}
+            report={currentDoctorReport}
             onOpenRepoSelector={handleOpenRepoModal}
             onLoadDemoRepo={handleRestoreDemoRepos}
+            isLoading={isInspecting}
+            onReanalyze={() => inspectRepository(activeRepo?.path || '.', activeRepo || undefined)}
           />
         );
       case 'explorer':
         return (
           <ExplorerView
             activeRepo={activeRepo}
-            report={activeRepo?.isDemo ? DEMO_EXPLORER_REPORT : null}
+            report={currentExplorerReport}
             onOpenRepoSelector={handleOpenRepoModal}
             onLoadDemoRepo={handleRestoreDemoRepos}
+            isLoading={isInspecting}
+            onReanalyze={() => inspectRepository(activeRepo?.path || '.', activeRepo || undefined)}
           />
         );
       case 'pr-compass':
         return (
           <PRCompassView
             activeRepo={activeRepo}
-            report={activeRepo?.isDemo ? DEMO_PR_COMPASS_REPORT : null}
+            report={currentPRCompassReport}
             onOpenRepoSelector={handleOpenRepoModal}
             onLoadDemoRepo={handleRestoreDemoRepos}
+            isLoading={isInspecting}
+            onReanalyze={() => inspectRepository(activeRepo?.path || '.', activeRepo || undefined)}
           />
         );
       default:

@@ -205,5 +205,19 @@ def pr_check(
         raise typer.Exit(code=1)
 
 
+@app.command(
+    name="serve",
+    help="Start the RepoPilot API server to power the developer dashboard.",
+)
+def serve(
+    host: str = typer.Option("127.0.0.1", "--host", "-h", help="Host address to bind to."),
+    port: int = typer.Option(8765, "--port", "-p", help="Port number to listen on."),
+) -> None:
+    """Start the lightweight HTTP API server for the web dashboard."""
+    from repopilot.server import run_server
+
+    run_server(host=host, port=port)
+
+
 if __name__ == "__main__":
     app()
